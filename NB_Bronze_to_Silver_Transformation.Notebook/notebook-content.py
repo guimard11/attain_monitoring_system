@@ -26,6 +26,7 @@
 import requests
 import pandas as pd
 from datetime import timedelta
+from pyspark.sql.functions import when, col, isnan, isnull
 
 # METADATA ********************
 
@@ -40,17 +41,6 @@ from datetime import timedelta
 bronze_success_spark_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_bronze.Lakehouse/Tables/dbo/success_spark"
 # Load the wind_power table into a DataFrame
 success_spark = spark.read.format("delta").load(bronze_success_spark_path)
-
-# METADATA ********************
-
-# META {
-# META   "language": "python",
-# META   "language_group": "synapse_pyspark"
-# META }
-
-# CELL ********************
-
-display(success_spark)
 
 # METADATA ********************
 
@@ -79,13 +69,46 @@ success_spark = success_spark.replace({
     "Non": "no"
 }, subset=["institution_financiere"])
 
-#import function when
-from pyspark.sql.functions import when, col, isnan, isnull
+# Replace data value name into the column "msme_productive"
+success_spark = success_spark.replace({
+    "Oui": "yes",
+    "Non": "no"
+}, subset=["msme_productive"])
+
+# Replace data value name into the column "group_epargne"
+success_spark = success_spark.replace({
+    "Aucun": "No group",
+}, subset=["group_epargne"])
+
+#Import functions
+from pyspark.sql.functions import dayofmonth, month, quarter, year
+
 
 # Replace all values inferior to 10000 and blank value in revenu_annuel
 success_spark = success_spark.withColumn("revenu_annuel", when(col("revenu_annuel") < 25000, 0)\
                               .when(col("revenu_annuel").isNull(), 0)\
-                              .otherwise(col("revenu_annuel")))
+                              .otherwise(col("revenu_annuel")))\
+                              .withColumn("age", when(col("age").isNull(), 18)\
+                              .when(col("age")== 16, 18))\
+                              .otherwise(col("age"))\
+                              .withColumn("secteur_activite", when(col("secteur_activite") == "Service", "Services")\
+                              .when(col("secteur_activite").isNull(), "Services")\
+                              .otherwise(col("secteur_activite")))\
+                              .withColumn("day", dayofmonth(col("date_enregistrement")))\
+                              .withColumn("month", month(col("date_enregistrement")))\
+                              .withColumn("quarter", quarter(col("date_enregistrement")))\
+                              .withColumn("year", year(col("date_enregistrement")))\
+                              .withColumnRenamed("partenaire", "partner")\
+                              .withColumnRenamed("institution_financiere", "financial_institution")\
+                              .withColumnRenamed("date_enregistrement", "registration_date")\
+                              .withColumnRenamed("nom_msme", "msme_name")\
+                              .withColumnRenamed("revenu_annuel", "annual_income")\
+                              .withColumnRenamed("type_msme", "msme_category")\
+                              .withColumnRenamed("secteur_activite", "industry")\
+                              .withColumnRenamed("nombre_employe", "employee_number")\
+                              .withColumnRenamed("group_epargne", "savings_group")\
+                              .withColumnRenamed("montant_pret", "loan_amount")
+                              
 
 # METADATA ********************
 
@@ -96,7 +119,7 @@ success_spark = success_spark.withColumn("revenu_annuel", when(col("revenu_annue
 
 # CELL ********************
 
-success_spark.select("revenu_annuel").orderBy("revenu_annuel").distinct().show()
+display(success_spark)
 
 # METADATA ********************
 
@@ -115,5 +138,7 @@ success_spark.select("revenu_annuel").orderBy("revenu_annuel").distinct().show()
 
 # META {
 # META   "language": "python",
-# META   "language_group": "synapse_pyspark"
+# META   "language_group": "synapse_pyspark",
+# META   "frozen": true,
+# META   "editable": false
 # META }
