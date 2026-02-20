@@ -26,7 +26,7 @@
 import requests
 import pandas as pd
 from datetime import timedelta
-from pyspark.sql.functions import when, col, isnan, isnull
+from pyspark.sql.functions import when, col, isnan, isnull,dayofmonth, month, quarter, year, round, to_date
 
 # METADATA ********************
 
@@ -51,10 +51,21 @@ success_spark = spark.read.format("delta").load(bronze_success_spark_path)
 
 # CELL ********************
 
+display(success_spark)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
 # clean and process the dataset success_spark
 
 # Replace data value name into the column partenaire
-success_spark = success_spark.replace({
+success_updated = success_spark.replace({
     "ACME 2": "ACME",
     "ACME 3": "ACME",
     "AIDE 2": "AIDE",
@@ -64,41 +75,45 @@ success_spark = success_spark.replace({
 }, subset=["partenaire"])
 
 # Replace data value name into the column "institution_financiere"
-success_spark = success_spark.replace({
+success_updated = success_updated.replace({
     "Oui": "yes",
     "Non": "no"
 }, subset=["institution_financiere"])
 
 # Replace data value name into the column "msme_productive"
-success_spark = success_spark.replace({
+success_updated = success_updated.replace({
     "Oui": "yes",
     "Non": "no"
 }, subset=["msme_productive"])
 
 # Replace data value name into the column "group_epargne"
-success_spark = success_spark.replace({
+success_updated = success_updated.replace({
     "Aucun": "No group",
+    "Association": "Association",
+    "AVEC": "AVEC group",
+    "BD&SME": "BD&SME",
+    "MUSO": "MUSO",
+    "Solidarite": "Solidarity group"
 }, subset=["group_epargne"])
 
-#Import functions
-from pyspark.sql.functions import dayofmonth, month, quarter, year
-
-
 # Replace all values inferior to 10000 and blank value in revenu_annuel
-success_spark = success_spark.withColumn("revenu_annuel", when(col("revenu_annuel") < 25000, 0)\
-                              .when(col("revenu_annuel").isNull(), 0)\
-                              .otherwise(col("revenu_annuel")))\
-                              .withColumn("age", when(col("age").isNull(), 18)\
-                              .when(col("age")== 16, 18))\
-                              .otherwise(col("age"))\
-                              .withColumn("secteur_activite", when(col("secteur_activite") == "Service", "Services")\
+success_updated = success_updated.withColumn("revenu_annuel", when(col("revenu_annuel") < 25000, 0)\
+                             .when(col("revenu_annuel").isNull(), 0)\
+                             .otherwise(col("revenu_annuel")))\
+                             .withColumn("nombre_employe", when(col("nombre_employe").isNull(), 1)\
+                             .otherwise(col("nombre_employe")))\
+                             .withColumn("nombre_employe", round(col("nombre_employe").cast("int")))\
+                             .withColumn("age", when(col("age").isNull(), 18)\
+                             .when((col("age")< 18) & (col("age")> 1), 18).otherwise(col("age")))\
+                             .withColumn("secteur_activite", when(col("secteur_activite") == "Service", "Services")\
                               .when(col("secteur_activite").isNull(), "Services")\
                               .otherwise(col("secteur_activite")))\
+                              .withColumn("date_enregistrement", to_date(col("date_enregistrement"), "M/d/yyyy"))\
                               .withColumn("day", dayofmonth(col("date_enregistrement")))\
                               .withColumn("month", month(col("date_enregistrement")))\
                               .withColumn("quarter", quarter(col("date_enregistrement")))\
                               .withColumn("year", year(col("date_enregistrement")))\
-                              .withColumnRenamed("partenaire", "partner")\
+                              .withColumnRenamed("partenaire", "business_partner")\
                               .withColumnRenamed("institution_financiere", "financial_institution")\
                               .withColumnRenamed("date_enregistrement", "registration_date")\
                               .withColumnRenamed("nom_msme", "msme_name")\
@@ -107,7 +122,9 @@ success_spark = success_spark.withColumn("revenu_annuel", when(col("revenu_annue
                               .withColumnRenamed("secteur_activite", "industry")\
                               .withColumnRenamed("nombre_employe", "employee_number")\
                               .withColumnRenamed("group_epargne", "savings_group")\
-                              .withColumnRenamed("montant_pret", "loan_amount")
+                              .withColumnRenamed("montant_pret", "loan_amount")\
+                              .withColumnRenamed("age", "business_owner_age")\
+                              .withColumnRenamed("sex", "business_owner_sex")
                               
 
 # METADATA ********************
@@ -119,7 +136,32 @@ success_spark = success_spark.withColumn("revenu_annuel", when(col("revenu_annue
 
 # CELL ********************
 
-display(success_spark)
+display(success_updated)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+col_type = dict(success_updated.dtypes)["year"]
+print(col_type)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+success_updated.select("year").distinct().orderBy("year").show()
+#df.select("ma_colonne").distinct().orderBy("ma_colonne").show()
+
 
 # METADATA ********************
 
