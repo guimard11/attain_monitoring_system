@@ -42,6 +42,8 @@
 
 # CELL ********************
 
+from pyspark.sql import Window
+from pyspark.sql.functions import row_number
 
 # METADATA ********************
 
@@ -110,6 +112,100 @@ date_success = success_updated.select("registration_date", "day", "month", "quar
 
 # CELL ********************
 
+partner_success = success_updated.select("business_partner", "financial_institution").distinct()\
+                                 .withColumn("partener_id", row_number().over(Window.orderBy("business_partner", "financial_institution")))
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+display(partner_success)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# ##### Creation of the project intervention area dimension table
+
+# CELL ********************
+
+area_success = success_updated.select("departement").distinct()\
+                                 .withColumn("area_id", row_number().over(Window.orderBy("departement")))
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+display(area_success)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# ##### Creation of industry and MSME category dimension table
+
+# CELL ********************
+
+category_msme_success = success_updated.select("industry", "msme_category", "msme_productive").distinct()\
+                                 .withColumn("category_id", row_number().over(Window.orderBy("msme_category", "msme_productive", "industry")))
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+display(category_msme_success)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# ##### Creation of type of Savings group dimension table
+
+# CELL ********************
+
+savings_success = success_updated.select("savings_group").distinct()\
+                                 .withColumn("savings_id", row_number().over(Window.orderBy("savings_group")))
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+display(savings_success)
 
 # METADATA ********************
 
