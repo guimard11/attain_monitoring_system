@@ -36,11 +36,11 @@
 
 # MARKDOWN ********************
 
-# ##### Loading the module required to process raw data in the datasets.
+# ##### Loading required modules to process raw data in the datasets.
 
 # CELL ********************
 
-# Load required module from Pyspark
+# Load required module 
 import requests
 import pandas as pd
 from datetime import timedelta
