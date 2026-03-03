@@ -16,7 +16,7 @@
 # META           "id": "5bb995e4-9bc1-42e4-b483-d62aadaafc35"
 # META         },
 # META         {
-# META           "id": "ad6c2670-8e52-4cb1-a385-669f61c55b3f"
+# META           "id": "ec0b398f-b6d2-42da-af11-ac8f3d497423"
 # META         }
 # META       ]
 # META     }
@@ -458,6 +458,17 @@ activity_updated = success_activity2.withColumn("activity_duration", round(col("
 
 # ##### Saving and writing stage
 
+# CELL ********************
+
+abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_silver.Lakehouse/Tables
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
 # MARKDOWN ********************
 
 # ###### 1. Save the dataset success_spark into the Lakehouse Silver (LH_success_silver) as success_updated.
@@ -465,7 +476,7 @@ activity_updated = success_activity2.withColumn("activity_duration", round(col("
 # CELL ********************
 
 ## Save the success_updated dataset into the Lakehouse Silver
-success_updated_path = "abfss://success_pipe_updated@onelake.dfs.fabric.microsoft.com/LH_success_silver.Lakehouse/Tables/dbo/success_updated"
+success_updated_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_silver.Lakehouse/Tables/dbo/success_updated"
 success_updated.write.format("delta").mode("overwrite").save(success_updated_path )
 
 # METADATA ********************
@@ -484,7 +495,7 @@ success_updated.write.format("delta").mode("overwrite").save(success_updated_pat
 # CELL ********************
 
 ## Save the job_updated dataset into the Lakehouse Silver
-job_updated_path = "abfss://success_pipe_updated@onelake.dfs.fabric.microsoft.com/LH_success_silver.Lakehouse/Tables/dbo/job_updated"
+job_updated_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_silver.Lakehouse/Tables/dbo/job_updated"
 job_updated.write.format("delta").mode("overwrite").save(job_updated_path )
 
 # METADATA ********************
@@ -501,7 +512,7 @@ job_updated.write.format("delta").mode("overwrite").save(job_updated_path )
 # CELL ********************
 
 ## Save the sales_updated dataset into the Lakehouse Silver
-sales_updated_path = "abfss://success_pipe_updated@onelake.dfs.fabric.microsoft.com/LH_success_silver.Lakehouse/Tables/dbo/sales_updated"
+sales_updated_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_silver.Lakehouse/Tables/dbo/sales_updated"
 sales_updated.write.format("delta").mode("overwrite").save(sales_updated_path )
 
 # METADATA ********************
@@ -518,7 +529,7 @@ sales_updated.write.format("delta").mode("overwrite").save(sales_updated_path )
 # CELL ********************
 
 ## Save the participant_updated dataset into the Lakehouse Silver
-participant_updated_path = "abfss://success_pipe_updated@onelake.dfs.fabric.microsoft.com/LH_success_silver.Lakehouse/Tables/dbo/participant_updated"
+participant_updated_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_silver.Lakehouse/Tables/dbo/participant_updated"
 participant_updated.write.format("delta").mode("overwrite").save(participant_updated_path )
 
 # METADATA ********************
@@ -535,7 +546,7 @@ participant_updated.write.format("delta").mode("overwrite").save(participant_upd
 # CELL ********************
 
 ## Save the hiring_updated dataset into the Lakehouse Silver
-hiring_updated_path = "abfss://success_pipe_updated@onelake.dfs.fabric.microsoft.com/LH_success_silver.Lakehouse/Tables/dbo/hiring_updated"
+hiring_updated_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_silver.Lakehouse/Tables/dbo/hiring_updated"
 hiring_updated.write.format("delta").mode("overwrite").save(hiring_updated_path )
 
 # METADATA ********************
@@ -552,7 +563,7 @@ hiring_updated.write.format("delta").mode("overwrite").save(hiring_updated_path 
 # CELL ********************
 
 ## Save the firing_updated dataset into the Lakehouse Silver
-firing_updated_path = "abfss://success_pipe_updated@onelake.dfs.fabric.microsoft.com/LH_success_silver.Lakehouse/Tables/dbo/firing_updated"
+firing_updated_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_silver.Lakehouse/Tables/dbo/firing_updated"
 firing_updated.write.format("delta").mode("overwrite").save(firing_updated_path )
 
 # METADATA ********************
@@ -569,7 +580,7 @@ firing_updated.write.format("delta").mode("overwrite").save(firing_updated_path 
 # CELL ********************
 
 ## Save the activity_updated dataset into the Lakehouse Silver
-activity_updated_path = "abfss://success_pipe_updated@onelake.dfs.fabric.microsoft.com/LH_success_silver.Lakehouse/Tables/dbo/activity_updated"
+activity_updated_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_silver.Lakehouse/Tables/dbo/activity_updated"
 activity_updated.write.format("delta").mode("overwrite").save(activity_updated_path )
 
 # METADATA ********************
