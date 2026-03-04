@@ -43,7 +43,8 @@
 # CELL ********************
 
 from pyspark.sql import Window
-from pyspark.sql.functions import row_number, when, col, isnan, isnull, round, lower
+from pyspark.sql.functions import row_number, when, col, isnan, isnull, round, lower, create_map, lit
+from itertools import chain
 from pyspark.sql.types import DecimalType
 
 # METADATA ********************
@@ -140,7 +141,18 @@ date_success = success_silver.select("registration_date", "day", "month", "quart
 # CELL ********************
 
 partner_success = success_silver.select("business_partner", "financial_institution").distinct()\
-                                 .withColumn("partener_id", row_number().over(Window.orderBy("business_partner", "financial_institution")))
+                                 .withColumn("partner_id", row_number().over(Window.orderBy("business_partner", "financial_institution")))
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+display(partner_success)
 
 # METADATA ********************
 
@@ -157,6 +169,17 @@ partner_success = success_silver.select("business_partner", "financial_instituti
 
 area_success = success_silver.select("departement").distinct()\
                                  .withColumn("area_id", row_number().over(Window.orderBy("departement")))
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+display(area_success)
 
 # METADATA ********************
 
@@ -269,3 +292,215 @@ date_success.write.format("delta").mode("overwrite").save(gold_date_success_path
 # * Extract all fact and dimension tables. 
 # * Generate Key primary and foreign one.
 # * Remove non-required variables.
+
+# CELL ********************
+
+# Importing the dataset success_updated
+activity_updated_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_silver.Lakehouse/Tables/dbo/activity_updated"
+
+# Load the success_updated table into a DataFrame
+activity_updated = spark.read.format("delta").load(activity_updated_path) 
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+display(activity_updated)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# ###### Creation of the date dimension table from activity_updated
+
+# CELL ********************
+
+date_activity = activity_updated.select("activity_date", "day_activity", "month_activity", "quarter_activity", "year_activity").distinct()\
+                            .withColumnRenamed("activity_date", "activity_date_id")
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+display(date_activity)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# ###### Creation of the support_type dimension table from activity_updated
+
+# CELL ********************
+
+support_activity = activity_updated.select("support_type").distinct()\
+                                 .withColumn("support_name", when(col("support_type")== "sup01", "Training")\
+                                 .when(col("support_type")== "sup02", "Coaching")\
+                                 .otherwise("Business legalization"))\
+                                 .withColumnRenamed("support_type", "support_id")
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+display(support_activity)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# ###### Linking the partner_success table to the original dataset activity_updated via the existing partner_key into the dataframe.
+
+# CELL ********************
+
+# Mapping dictionaries
+partner_mapping = {
+    "ccf1": 5,
+    "fp1": 13,
+    "gec1": 14,
+    "ced1": 6,
+    "cf1": 8,
+    "gc1": 15,
+    "mc1": 17,
+    "sik1": 20,
+    "aid1": 2,
+    "kn1": 16
+}
+
+department_mapping = {
+    "Nord": 5,
+    "Sud": 8,
+    "Centre": 2
+}
+
+# Convert dictionaries to Spark map expressions
+partner_map_expr = create_map([lit(x) for x in chain(*partner_mapping.items())])
+department_map_expr = create_map([lit(x) for x in chain(*department_mapping.items())])
+
+# Apply transformations
+activity_updated = (
+    activity_updated
+    .withColumn("partner_id", partner_map_expr[col("partner_key")])
+    .withColumn("area_id", department_map_expr[col("department")])
+    .drop("partner_key", "department")
+)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark",
+# META   "frozen": true,
+# META   "editable": false
+# META }
+
+# CELL ********************
+
+activity_updated = activity_updated.replace({
+    "ccf1" : "5",
+    "fp1" : "13",
+    "gec1" : "14",
+    "ced1" : "6",
+    "cf1" : "8",
+    "gc1" : "15",
+    "mc1" : "17",
+    "sik1" : "20",
+    "aid1" : "2",
+    "kn1" : "16"
+}, subset = ["partner_key"])\
+.withColumn("partner_key", col("partner_key").cast("int"))\
+.withColumnRenamed("partner_key", "partner_id")\
+.replace({
+    "Nord" : "5",
+    "Sud" : "8",
+    "Centre" : "2"
+}, subset= ["department"])\
+.withColumn("department", col("department").cast("int"))\
+.withColumnRenamed("department", "area_id")
+
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+display(activity_updated)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# ###### Create the fact table from the original dataset success_silver
+
+# CELL ********************
+
+# Select all required variables to create the fact table success_fact
+activity_fact = activity_updated.select('activity_id', 'support_type', 'partner_id', 'area_id', 'activity_theme', 'activity_duration', 'attendance_number')\
+                             .withColumnRenamed('support_type', "support_id")
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+display(activity_fact)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+print(activity_updated.columns)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
