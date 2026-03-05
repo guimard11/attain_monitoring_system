@@ -308,17 +308,6 @@ activity_updated = spark.read.format("delta").load(activity_updated_path)
 # META   "language_group": "synapse_pyspark"
 # META }
 
-# CELL ********************
-
-display(activity_updated)
-
-# METADATA ********************
-
-# META {
-# META   "language": "python",
-# META   "language_group": "synapse_pyspark"
-# META }
-
 # MARKDOWN ********************
 
 # ###### Creation of the date dimension table from activity_updated
@@ -327,17 +316,6 @@ display(activity_updated)
 
 date_activity = activity_updated.select("activity_date", "day_activity", "month_activity", "quarter_activity", "year_activity").distinct()\
                             .withColumnRenamed("activity_date", "activity_date_id")
-
-# METADATA ********************
-
-# META {
-# META   "language": "python",
-# META   "language_group": "synapse_pyspark"
-# META }
-
-# CELL ********************
-
-display(date_activity)
 
 # METADATA ********************
 
@@ -357,17 +335,6 @@ support_activity = activity_updated.select("support_type").distinct()\
                                  .when(col("support_type")== "sup02", "Coaching")\
                                  .otherwise("Business legalization"))\
                                  .withColumnRenamed("support_type", "support_id")
-
-# METADATA ********************
-
-# META {
-# META   "language": "python",
-# META   "language_group": "synapse_pyspark"
-# META }
-
-# CELL ********************
-
-display(support_activity)
 
 # METADATA ********************
 
@@ -419,51 +386,8 @@ activity_updated = (
 # META {
 # META   "language": "python",
 # META   "language_group": "synapse_pyspark",
-# META   "frozen": true,
-# META   "editable": false
-# META }
-
-# CELL ********************
-
-activity_updated = activity_updated.replace({
-    "ccf1" : "5",
-    "fp1" : "13",
-    "gec1" : "14",
-    "ced1" : "6",
-    "cf1" : "8",
-    "gc1" : "15",
-    "mc1" : "17",
-    "sik1" : "20",
-    "aid1" : "2",
-    "kn1" : "16"
-}, subset = ["partner_key"])\
-.withColumn("partner_key", col("partner_key").cast("int"))\
-.withColumnRenamed("partner_key", "partner_id")\
-.replace({
-    "Nord" : "5",
-    "Sud" : "8",
-    "Centre" : "2"
-}, subset= ["department"])\
-.withColumn("department", col("department").cast("int"))\
-.withColumnRenamed("department", "area_id")
-
-
-# METADATA ********************
-
-# META {
-# META   "language": "python",
-# META   "language_group": "synapse_pyspark"
-# META }
-
-# CELL ********************
-
-display(activity_updated)
-
-# METADATA ********************
-
-# META {
-# META   "language": "python",
-# META   "language_group": "synapse_pyspark"
+# META   "frozen": false,
+# META   "editable": true
 # META }
 
 # MARKDOWN ********************
@@ -472,7 +396,7 @@ display(activity_updated)
 
 # CELL ********************
 
-# Select all required variables to create the fact table success_fact
+# Select all required variables to create the fact table activity_fact
 activity_fact = activity_updated.select('activity_id', 'support_type', 'partner_id', 'area_id', 'activity_theme', 'activity_duration', 'attendance_number')\
                              .withColumnRenamed('support_type', "support_id")
 
@@ -483,9 +407,21 @@ activity_fact = activity_updated.select('activity_id', 'support_type', 'partner_
 # META   "language_group": "synapse_pyspark"
 # META }
 
+# MARKDOWN ********************
+
+# ###### Save the fact and dimension tables extracted from the original dataset activity_updated into the Lakehouse Gold.
+
 # CELL ********************
 
-display(activity_fact)
+# Generate each of path related to every table.
+gold_activity_fact_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_gold.Lakehouse/Tables/dbo/activity_fact"
+gold_support_activity_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_gold.Lakehouse/Tables/dbo/support_activity"
+gold_date_activity_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_gold.Lakehouse/Tables/dbo/date_activity"
+
+# Save the tables into the gold Lakehouse
+activity_fact.write.format("delta").mode("overwrite").save(gold_activity_fact_path)
+support_activity.write.format("delta").mode("overwrite").save(gold_support_activity_path)
+date_activity.write.format("delta").mode("overwrite").save(gold_date_activity_path)
 
 # METADATA ********************
 
@@ -494,9 +430,208 @@ display(activity_fact)
 # META   "language_group": "synapse_pyspark"
 # META }
 
+# MARKDOWN ********************
+
+# ##### 3. Processing case of the dataset sales_updated by extracting fact and dimension tables.
+# * Importing the dataset from the Lakehouse Silver.
+# * Extract all fact and dimension tables. 
+# * Generate Key primary and foreign one.
+# * Remove non-required variables.
+
 # CELL ********************
 
-print(activity_updated.columns)
+# Importing the dataset success_updated
+sales_updated_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_silver.Lakehouse/Tables/dbo/sales_updated"
+
+# Load the success_updated table into a DataFrame
+sales_updated = spark.read.format("delta").load(sales_updated_path) 
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# ###### Creation of the date dimension table from sales_updated
+
+# CELL ********************
+
+date_sales = sales_updated.select("sales_reporting_date", "day_sales_reporting", "month_sales_reporting", "quarter_sales_reporting", "year_sales_reporting").distinct()\
+                            .withColumnRenamed("sales_reporting_date", "date_sales_id")
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# ###### Create the fact table from the original dataset sales_updated
+
+# CELL ********************
+
+# Select all required variables to create the fact table sales_fact
+sales_fact = sales_updated.select('sales_key', 'msme_key', 'sales_reporting_date', 'domestic_sale', 'international_sale')\
+                             .withColumnRenamed('sales_reporting_date', "date_sales_id")
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# ###### Save the fact and dimension tables extracted from the original dataset sales_updated into the Lakehouse Gold.
+
+# CELL ********************
+
+# Generate each of path related to every table.
+gold_sales_fact_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_gold.Lakehouse/Tables/dbo/sales_fact"
+gold_date_sales_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_gold.Lakehouse/Tables/dbo/date_sales"
+
+# Save the tables into the gold Lakehouse
+sales_fact.write.format("delta").mode("overwrite").save(gold_sales_fact_path)
+date_sales.write.format("delta").mode("overwrite").save(gold_date_sales_path)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# ##### 4. Processing case of the dataset job_updated by extracting fact and dimension tables.
+# * Importing the dataset from the Lakehouse Silver.
+# * Extract all fact and dimension tables. 
+# * Generate Key primary and foreign one.
+# * Remove non-required variables.
+
+# CELL ********************
+
+# Importing the dataset success_updated
+job_updated_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_silver.Lakehouse/Tables/dbo/job_updated"
+
+# Load the success_updated table into a DataFrame
+job_updated = spark.read.format("delta").load(job_updated_path) 
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# ###### Creation of the date dimension table from job_updated
+
+# CELL ********************
+
+date_job = job_updated.select("collecting_date", "day", "month", "quarter", "year").distinct()\
+                            .withColumnRenamed("collecting_date", "date_job_id")
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# ###### Create the fact table from the original dataset job_updated
+
+# CELL ********************
+
+# Select all required variables to create the fact table job_fact
+job_fact = job_updated.select('job_key', 'msme_key', 'collecting_date', 'total_hired_employee', 'total_fired_employee')\
+                             .withColumnRenamed('collecting_date', "date_job_id")
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# ###### Save the fact and dimension tables extracted from the original dataset job_updated into the Lakehouse Gold.
+
+# CELL ********************
+
+# Generate each of path related to every table.
+gold_job_fact_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_gold.Lakehouse/Tables/dbo/job_fact"
+gold_date_job_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_gold.Lakehouse/Tables/dbo/date_job"
+
+# Save the tables into the gold Lakehouse
+job_fact.write.format("delta").mode("overwrite").save(gold_job_fact_path)
+date_job.write.format("delta").mode("overwrite").save(gold_date_job_path)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# ##### 4. Processing case of the dataset firing_updated by normalizing it.
+# * Importing the dataset from the Lakehouse Silver.
+# * Remove non-required variables.
+
+# CELL ********************
+
+# Importing the dataset success_updated
+firing_updated_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_silver.Lakehouse/Tables/dbo/firing_updated"
+
+# Load the success_updated table into a DataFrame
+firing_updated = spark.read.format("delta").load(firing_updated_path) 
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# ###### Removing all non necessary variables (confidential data) from the original dataset firing_updated
+
+# CELL ********************
+
+# Select all required variables to create the fact table job_fact
+firing = firing_updated.select('lic_key', 'job_key', 'sex', 'age')
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# ###### Save the firing table extracted from the original dataset firing_updated into the Lakehouse Gold.
+
+# CELL ********************
+
+# Generate each of path related to every table.
+gold_firing_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_gold.Lakehouse/Tables/dbo/firing"
+
+# Save the tables into the gold Lakehouse
+firing.write.format("delta").mode("overwrite").save(gold_firing_path)
 
 # METADATA ********************
 
