@@ -150,17 +150,6 @@ partner_success = success_silver.select("business_partner", "financial_instituti
 # META   "language_group": "synapse_pyspark"
 # META }
 
-# CELL ********************
-
-display(partner_success)
-
-# METADATA ********************
-
-# META {
-# META   "language": "python",
-# META   "language_group": "synapse_pyspark"
-# META }
-
 # MARKDOWN ********************
 
 # ###### Creation of the project intervention area dimension table
@@ -169,17 +158,6 @@ display(partner_success)
 
 area_success = success_silver.select("departement").distinct()\
                                  .withColumn("area_id", row_number().over(Window.orderBy("departement")))
-
-# METADATA ********************
-
-# META {
-# META   "language": "python",
-# META   "language_group": "synapse_pyspark"
-# META }
-
-# CELL ********************
-
-display(area_success)
 
 # METADATA ********************
 
@@ -397,8 +375,30 @@ activity_updated = (
 # CELL ********************
 
 # Select all required variables to create the fact table activity_fact
-activity_fact = activity_updated.select('activity_id', 'support_type', 'partner_id', 'area_id', 'activity_theme', 'activity_duration', 'attendance_number')\
-                             .withColumnRenamed('support_type', "support_id")
+activity_fact = activity_updated.select('activity_id', 'activity_date', 'support_type', 'partner_id', 'area_id', 'activity_theme', 'activity_duration', 'attendance_number')\
+                             .withColumnRenamed('support_type', "support_id")\
+                             .withColumnRenamed('activity_date', 'activity_date_id')
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# ##### Save the support_activity table as delta format to be saved into the gold Lakehouse.
+
+# CELL ********************
+
+# Save the support_activity into the Silver Lakehouse as delta format
+support_activity_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_silver.Lakehouse/Tables/dbo/support_activity"
+support_activity.write.format("delta").mode("overwrite").save(support_activity_path)
+
+# Save the support_activity into the gold lakehouse
+gold_support_activity_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_gold.Lakehouse/Tables/dbo/support_activity"
+support_activity.write.format("delta").mode("overwrite").save(gold_support_activity_path)
 
 # METADATA ********************
 
@@ -415,12 +415,10 @@ activity_fact = activity_updated.select('activity_id', 'support_type', 'partner_
 
 # Generate each of path related to every table.
 gold_activity_fact_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_gold.Lakehouse/Tables/dbo/activity_fact"
-gold_support_activity_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_gold.Lakehouse/Tables/dbo/support_activity"
 gold_date_activity_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_gold.Lakehouse/Tables/dbo/date_activity"
 
 # Save the tables into the gold Lakehouse
-activity_fact.write.format("delta").mode("overwrite").save(gold_activity_fact_path)
-support_activity.write.format("delta").mode("overwrite").save(gold_support_activity_path)
+activity_fact.write.format("delta").mode("overwrite").option("mergeSchema", "true").save(gold_activity_fact_path)
 date_activity.write.format("delta").mode("overwrite").save(gold_date_activity_path)
 
 # METADATA ********************
@@ -586,7 +584,7 @@ date_job.write.format("delta").mode("overwrite").save(gold_date_job_path)
 
 # MARKDOWN ********************
 
-# ##### 4. Processing case of the dataset firing_updated by normalizing it.
+# ##### 5. Processing case of the dataset firing_updated by anonymizing it.
 # * Importing the dataset from the Lakehouse Silver.
 # * Remove non-required variables.
 
@@ -632,6 +630,87 @@ gold_firing_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH
 
 # Save the tables into the gold Lakehouse
 firing.write.format("delta").mode("overwrite").save(gold_firing_path)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# ##### 6. Processing case of the dataset hiring_updated by anonymizing it.
+# * Importing the dataset from the Lakehouse Silver.
+# * Remove non-required variables.
+
+# CELL ********************
+
+# Importing the dataset success_updated
+hiring_updated_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_silver.Lakehouse/Tables/dbo/hiring_updated"
+
+# Load the success_updated table into a DataFrame
+hiring_updated = spark.read.format("delta").load(hiring_updated_path) 
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# ###### Removing all non necessary variables (confidential data) from the original dataset hiring_updated
+
+# CELL ********************
+
+# Select all required variables to create the fact table job_fact
+hiring = hiring_updated.select('employee_key', 'job_key', 'age', 'sex', 'contract_duration', 'is_full_time', 'have_insurance', 'thanks_to_project_support', 'is_decent_work')
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# ###### Save the hiring table extracted from the original dataset hiring_updated into the Lakehouse Gold.
+
+# CELL ********************
+
+# Generate each of path related to every table.
+gold_hiring_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_gold.Lakehouse/Tables/dbo/hiring"
+
+# Save the tables into the gold Lakehouse
+hiring.write.format("delta").mode("overwrite").save(gold_hiring_path)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# ##### 7. Load and save the dataset participant_updated into the Lakehouse gold
+
+# CELL ********************
+
+# Importing the dataset success_updated
+participant_updated_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_silver.Lakehouse/Tables/dbo/participant_updated"
+
+# Load the success_updated table into a DataFrame
+participant_updated = spark.read.format("delta").load(participant_updated_path) 
+
+# Generate the path to save the participant_updated into the Lakehouse gold.
+gold_participant_updated_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_gold.Lakehouse/Tables/dbo/participant_updated"
+
+# Save the tables into the gold Lakehouse
+participant_updated.write.format("delta").mode("overwrite").save(gold_participant_path)
 
 # METADATA ********************
 
