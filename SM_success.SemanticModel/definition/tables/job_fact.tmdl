@@ -1,0 +1,59 @@
+table job_fact
+	lineageTag: 2c6a8a98-1b22-4f85-b2fb-8ef0ecb0b9ed
+	sourceLineageTag: [dbo].[job_fact]
+
+	column job_key
+		dataType: string
+		lineageTag: c781e508-0b4a-4428-ad2e-89d279f9e008
+		sourceLineageTag: job_key
+		summarizeBy: none
+		sourceColumn: job_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column msme_key
+		dataType: string
+		lineageTag: 52f7a1bb-59e3-4afa-972a-befef1ab0b7f
+		sourceLineageTag: msme_key
+		summarizeBy: none
+		sourceColumn: msme_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_job_id
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: ff561e9d-f7b4-461d-a048-060e183dcdc9
+		sourceLineageTag: date_job_id
+		summarizeBy: none
+		sourceColumn: date_job_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_hired_employee
+		dataType: int64
+		formatString: 0
+		lineageTag: 0b32d90e-0997-4261-a8b4-8bec639bebd5
+		sourceLineageTag: total_hired_employee
+		summarizeBy: sum
+		sourceColumn: total_hired_employee
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_fired_employee
+		dataType: int64
+		formatString: 0
+		lineageTag: 3d3c1d72-bbe6-4e6a-be34-70a5ed461839
+		sourceLineageTag: total_fired_employee
+		summarizeBy: sum
+		sourceColumn: total_fired_employee
+
+		annotation SummarizationSetBy = Automatic
+
+	partition job_fact = entity
+		mode: directLake
+		source
+			entityName: job_fact
+			schemaName: dbo
+			expressionSource: 'DirectLake - LH_success_gold'
+

@@ -1,0 +1,30 @@
+table savings_success
+	lineageTag: bb111300-9a5f-47a3-a85c-c10e7bcfd59f
+	sourceLineageTag: [dbo].[savings_success]
+
+	column savings_group
+		dataType: string
+		lineageTag: d00fed80-9672-4102-94e9-4edf3b6cbe36
+		sourceLineageTag: savings_group
+		summarizeBy: none
+		sourceColumn: savings_group
+
+		annotation SummarizationSetBy = Automatic
+
+	column savings_id
+		dataType: int64
+		formatString: 0
+		lineageTag: b30a6a6a-9e9c-4ff7-9019-fa72a2a1c730
+		sourceLineageTag: savings_id
+		summarizeBy: none
+		sourceColumn: savings_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition savings_success = entity
+		mode: directLake
+		source
+			entityName: savings_success
+			schemaName: dbo
+			expressionSource: 'DirectLake - LH_success_gold'
+

@@ -1,0 +1,61 @@
+table date_job
+	lineageTag: e95a9aa4-d2e4-4d58-9b52-bf0272003d65
+	sourceLineageTag: [dbo].[date_job]
+
+	column date_job_id
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: e0373b38-f9cc-47d4-9ee7-8a5007629072
+		sourceLineageTag: date_job_id
+		summarizeBy: none
+		sourceColumn: date_job_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column day
+		dataType: int64
+		formatString: 0
+		lineageTag: 38c547c9-d1c4-4c9e-b656-ff217a402c34
+		sourceLineageTag: day
+		summarizeBy: none
+		sourceColumn: day
+
+		annotation SummarizationSetBy = Automatic
+
+	column month
+		dataType: int64
+		formatString: 0
+		lineageTag: 32e2bd3e-dd05-47b0-aa79-94fe445cd0fb
+		sourceLineageTag: month
+		summarizeBy: none
+		sourceColumn: month
+
+		annotation SummarizationSetBy = Automatic
+
+	column quarter
+		dataType: int64
+		formatString: 0
+		lineageTag: 307a715d-dce9-441b-aaf4-ac182bc1f7d3
+		sourceLineageTag: quarter
+		summarizeBy: none
+		sourceColumn: quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: 4abab30c-5b03-4e0f-9870-1a51f3ae03e7
+		sourceLineageTag: year
+		summarizeBy: none
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	partition date_job = entity
+		mode: directLake
+		source
+			entityName: date_job
+			schemaName: dbo
+			expressionSource: 'DirectLake - LH_success_gold'
+

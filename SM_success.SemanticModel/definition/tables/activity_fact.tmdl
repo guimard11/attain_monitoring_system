@@ -1,0 +1,88 @@
+table activity_fact
+	lineageTag: c87a6532-ae9b-480d-a82b-add7662ee249
+	sourceLineageTag: [dbo].[activity_fact]
+
+	column activity_id
+		dataType: string
+		lineageTag: 715ff82f-1be1-4196-a370-deb832b5564c
+		sourceLineageTag: activity_id
+		summarizeBy: none
+		sourceColumn: activity_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column support_id
+		dataType: string
+		lineageTag: 02393268-368a-401f-8ec7-3f136f84fb05
+		sourceLineageTag: support_id
+		summarizeBy: none
+		sourceColumn: support_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column partner_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 50aaf9d5-4c24-4961-acce-08d20d485180
+		sourceLineageTag: partner_id
+		summarizeBy: sum
+		sourceColumn: partner_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column area_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 1a0a8c1d-a2ca-424e-8281-2a3c11c2d799
+		sourceLineageTag: area_id
+		summarizeBy: sum
+		sourceColumn: area_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column activity_theme
+		dataType: string
+		lineageTag: 91af0722-7b35-41c2-8a62-c5985848136b
+		sourceLineageTag: activity_theme
+		summarizeBy: none
+		sourceColumn: activity_theme
+
+		annotation SummarizationSetBy = Automatic
+
+	column activity_duration
+		dataType: int64
+		formatString: 0
+		lineageTag: 34703359-66b8-4bcf-a4c0-9d3083e5f042
+		sourceLineageTag: activity_duration
+		summarizeBy: sum
+		sourceColumn: activity_duration
+
+		annotation SummarizationSetBy = Automatic
+
+	column attendance_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 4fcd4501-09f1-49e9-bd22-c7b2a422bf9f
+		sourceLineageTag: attendance_number
+		summarizeBy: sum
+		sourceColumn: attendance_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column activity_date_id
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: bd0aa028-ebb3-4af4-92e1-b79a6e43ab33
+		sourceLineageTag: activity_date_id
+		summarizeBy: none
+		sourceColumn: activity_date_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition activity_fact = entity
+		mode: directLake
+		source
+			entityName: activity_fact
+			schemaName: dbo
+			expressionSource: 'DirectLake - LH_success_gold'
+

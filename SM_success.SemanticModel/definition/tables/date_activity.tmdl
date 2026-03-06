@@ -1,0 +1,61 @@
+table date_activity
+	lineageTag: 02138885-c3e5-44a8-b282-62a003ec43ac
+	sourceLineageTag: [dbo].[date_activity]
+
+	column activity_date_id
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 3ca9203c-7dfc-49d3-9c06-2b728562ce4e
+		sourceLineageTag: activity_date_id
+		summarizeBy: none
+		sourceColumn: activity_date_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_activity
+		dataType: int64
+		formatString: 0
+		lineageTag: 460aa00b-e37c-401c-b1a1-ae204b03c989
+		sourceLineageTag: day_activity
+		summarizeBy: none
+		sourceColumn: day_activity
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_activity
+		dataType: int64
+		formatString: 0
+		lineageTag: a3fcff54-e0a2-40e5-810b-c6184b1325af
+		sourceLineageTag: month_activity
+		summarizeBy: none
+		sourceColumn: month_activity
+
+		annotation SummarizationSetBy = Automatic
+
+	column quarter_activity
+		dataType: int64
+		formatString: 0
+		lineageTag: 21c76ae5-276a-4561-a914-405f3e477023
+		sourceLineageTag: quarter_activity
+		summarizeBy: none
+		sourceColumn: quarter_activity
+
+		annotation SummarizationSetBy = Automatic
+
+	column year_activity
+		dataType: int64
+		formatString: 0
+		lineageTag: a12a41f1-90f4-456d-8c6b-46a1b5daa5d2
+		sourceLineageTag: year_activity
+		summarizeBy: none
+		sourceColumn: year_activity
+
+		annotation SummarizationSetBy = Automatic
+
+	partition date_activity = entity
+		mode: directLake
+		source
+			entityName: date_activity
+			schemaName: dbo
+			expressionSource: 'DirectLake - LH_success_gold'
+

@@ -1,0 +1,29 @@
+table support_activity
+	lineageTag: 271a7cab-8586-417c-b799-811b8c64bb0c
+	sourceLineageTag: [dbo].[support_activity]
+
+	column support_id
+		dataType: string
+		lineageTag: ac018838-0ccb-43db-b74a-bb43782b09c8
+		sourceLineageTag: support_id
+		summarizeBy: none
+		sourceColumn: support_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column support_name
+		dataType: string
+		lineageTag: 132a7a5b-c934-4661-b7bb-9b5ec82fe5fc
+		sourceLineageTag: support_name
+		summarizeBy: none
+		sourceColumn: support_name
+
+		annotation SummarizationSetBy = Automatic
+
+	partition support_activity = entity
+		mode: directLake
+		source
+			entityName: support_activity
+			schemaName: dbo
+			expressionSource: 'DirectLake - LH_success_gold'
+
