@@ -1,0 +1,66 @@
+table date_success
+	lineageTag: 4cd5ecf6-f807-4858-ba5e-4cd194481c53
+	sourceLineageTag: c73821ef-1167-401b-9eb5-cd23728c4043
+
+	column registration_date_id
+		dataType: dateTime
+		isNullable: false
+		formatString: General Number
+		lineageTag: f7967871-3caa-4925-a72b-423c95b7727e
+		sourceLineageTag: 06556240-3e1a-4f98-ab77-992771b63459
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: registration_date_id
+
+		annotation SummarizationSetBy = User
+
+	column day_success
+		dataType: int64
+		formatString: 0
+		lineageTag: 82225bde-d8f3-4263-abb6-1976fc32f54e
+		sourceLineageTag: cb8822dd-a25b-4f62-a24e-bf86ae6728d9
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: day_success
+
+		annotation SummarizationSetBy = User
+
+	column month_success
+		dataType: int64
+		formatString: 0
+		lineageTag: 9ebaa46f-0804-416d-a33d-6f797722b90f
+		sourceLineageTag: ded97d2d-52d7-46f9-bc79-84c677bc1606
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: month_success
+
+		annotation SummarizationSetBy = User
+
+	column quarter_success
+		dataType: int64
+		formatString: 0
+		lineageTag: 9bb9a5da-1d46-486c-a2c9-762a63f7c1da
+		sourceLineageTag: 32a3fe8e-b43a-4ff4-bf6c-18f49a5622f1
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: quarter_success
+
+		annotation SummarizationSetBy = User
+
+	column year_success
+		dataType: int64
+		formatString: 0
+		lineageTag: 08b42358-a9b7-44a6-b6b0-4a266bddef44
+		sourceLineageTag: b3052902-e2e3-4c30-b948-49b55e459f7c
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: year_success
+
+		annotation SummarizationSetBy = User
+
+	partition date_success = entity
+		mode: directQuery
+		source
+			entityName: date_success
+			expressionSource: 'DirectQuery to AS - SM_success'
+

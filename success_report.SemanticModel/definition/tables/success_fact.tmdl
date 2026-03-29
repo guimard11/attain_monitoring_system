@@ -1,0 +1,64 @@
+table success_fact
+	lineageTag: 326946d3-0ba9-4bd8-9528-752716de1e3c
+	sourceLineageTag: 78c3cdd7-79a3-46f6-b985-7242144c0a19
+
+	column msme_key
+		dataType: string
+		isNullable: false
+		lineageTag: 26a6fdd7-7855-4299-93c3-237542c7dd72
+		sourceLineageTag: ddd263c7-3099-4d65-aac7-a8c3edcec211
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: msme_key
+
+		annotation SummarizationSetBy = User
+
+	column registration_date_id
+		dataType: dateTime
+		formatString: General Number
+		lineageTag: abb30b1c-854c-44ec-bca7-3e05f74089c7
+		sourceLineageTag: e7fafaab-6270-4bdf-a420-a6ee7182ae17
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: registration_date_id
+
+		annotation SummarizationSetBy = User
+
+	column annual_income
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: d4b2407f-6a51-4cdb-aea7-bfcaf94dc190
+		sourceLineageTag: 36653698-dcb1-4871-96d3-43ac6f5b33e3
+		dataCategory: Uncategorized
+		summarizeBy: sum
+		sourceColumn: annual_income
+
+		annotation SummarizationSetBy = User
+
+	column employee_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 9ec45bb4-0c1c-4f67-92ad-919e89ed6f35
+		sourceLineageTag: 6cd5b0c9-3418-45dc-b011-8fdfecc55c40
+		dataCategory: Uncategorized
+		summarizeBy: sum
+		sourceColumn: employee_number
+
+		annotation SummarizationSetBy = User
+
+	column loan_amount
+		dataType: double
+		lineageTag: 4bc9175c-839e-4400-9244-7cbf56cb8ec4
+		sourceLineageTag: be11d618-704c-4024-a64c-517e29f08f76
+		dataCategory: Uncategorized
+		summarizeBy: sum
+		sourceColumn: loan_amount
+
+		annotation SummarizationSetBy = User
+
+	partition success_fact = entity
+		mode: directQuery
+		source
+			entityName: success_fact
+			expressionSource: 'DirectQuery to AS - SM_success'
+

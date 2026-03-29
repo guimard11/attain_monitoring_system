@@ -1,0 +1,11 @@
+expression 'DirectQuery to AS - SM_success' =
+		let
+		    Source = AnalysisServices.Database("powerbi://api.powerbi.com/v1.0/myorg/success_pipeline", "SM_success"),
+		    Cubes = Table.Combine(Source[Data]),
+		    Cube = Cubes{[Id="Model", Kind="Cube"]}[Data]
+		in
+		    Cube
+	lineageTag: da8de1f6-7836-4fcf-88b9-6cbb6922ec37
+
+	annotation PBI_IncludeFutureArtifacts = True
+

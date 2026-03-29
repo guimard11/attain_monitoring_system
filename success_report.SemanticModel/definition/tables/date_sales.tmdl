@@ -1,0 +1,66 @@
+table date_sales
+	lineageTag: 41292b91-c2b0-4ba5-b21e-2e341fac1f98
+	sourceLineageTag: a6f63728-3348-4ac5-b0ef-6206a30fddd7
+
+	column date_sales_id
+		dataType: dateTime
+		isNullable: false
+		formatString: General Number
+		lineageTag: 54bf140f-16d0-4a95-a01a-e9ef3caa497a
+		sourceLineageTag: 9ae838c3-1f8c-4b20-911e-600b85eff07d
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: date_sales_id
+
+		annotation SummarizationSetBy = User
+
+	column day_sales_reporting
+		dataType: int64
+		formatString: 0
+		lineageTag: 0a3ee1d6-4792-4097-94a3-6f07435b82f9
+		sourceLineageTag: 00f96abd-c75e-40d6-96e6-9b6b1de51280
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: day_sales_reporting
+
+		annotation SummarizationSetBy = User
+
+	column month_sales_reporting
+		dataType: int64
+		formatString: 0
+		lineageTag: 3700e467-730e-47c9-ad70-ecf86da3240f
+		sourceLineageTag: 03b2b84b-4f8b-4203-916d-176a81a2ba69
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: month_sales_reporting
+
+		annotation SummarizationSetBy = User
+
+	column quarter_sales_reporting
+		dataType: int64
+		formatString: 0
+		lineageTag: 435e9327-1dd1-48cc-81fc-6d1245777e2c
+		sourceLineageTag: 204f23e5-a682-4efa-86af-a9c820b1bc56
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: quarter_sales_reporting
+
+		annotation SummarizationSetBy = User
+
+	column year_sales_reporting
+		dataType: int64
+		formatString: 0
+		lineageTag: 5dec4d96-ba61-423a-bb46-3b09b63e0408
+		sourceLineageTag: 087721ec-da63-4b7b-9de0-4c7e00f25b5d
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: year_sales_reporting
+
+		annotation SummarizationSetBy = User
+
+	partition date_sales = entity
+		mode: directQuery
+		source
+			entityName: date_sales
+			expressionSource: 'DirectQuery to AS - SM_success'
+

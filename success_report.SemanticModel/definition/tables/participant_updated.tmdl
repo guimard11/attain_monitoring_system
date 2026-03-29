@@ -1,0 +1,30 @@
+table participant_updated
+	lineageTag: c1183b14-d6b7-4d21-bbf0-91e211a7c724
+	sourceLineageTag: cfcc998a-7750-49c6-8bb9-b751c00f7795
+
+	column activity_id
+		dataType: string
+		lineageTag: aed72a38-4e55-4268-abd5-9dd16e8ff58f
+		sourceLineageTag: 26422e1d-8496-47c4-8142-72017a1b1501
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: activity_id
+
+		annotation SummarizationSetBy = User
+
+	column msme_key
+		dataType: string
+		lineageTag: 67c5cd7b-4cde-45ec-88bc-8c81c421feb8
+		sourceLineageTag: 679fca6c-e44d-45b4-ba38-c827787ddefa
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: msme_key
+
+		annotation SummarizationSetBy = User
+
+	partition participant_updated = entity
+		mode: directQuery
+		source
+			entityName: participant_updated
+			expressionSource: 'DirectQuery to AS - SM_success'
+

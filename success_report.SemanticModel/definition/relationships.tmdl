@@ -1,0 +1,50 @@
+relationship 4149e6e8-d720-4939-8c80-1051256f454b
+	fromColumn: success_fact.registration_date_id
+	toColumn: date_success.registration_date_id
+
+relationship 2af98a01-da6d-404d-a435-97428d89217b
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: success_fact.msme_key
+	toColumn: success_profile.msme_key
+
+relationship 7efdb60e-369c-42f2-bd25-db9280ab9d73
+	fromColumn: job_fact.job_key
+	toColumn: hiring.job_key
+
+relationship 39d819e0-cd7f-4aa4-a19d-d0cb3b51c677
+	fromColumn: job_fact.date_job_id
+	toColumn: date_job.date_job_id
+
+relationship c0ad6432-40f2-4003-89ff-463e5e71b100
+	fromColumn: job_fact.job_key
+	toColumn: firing.job_key
+
+relationship b230a6aa-d9ed-4ba6-ac14-40a28f6010da
+	fromColumn: job_fact.msme_key
+	toColumn: success_profile.msme_key
+
+relationship b1fbabbf-66cf-4149-8ae6-3944f8122e62
+	fromColumn: sales_fact.date_sales_id
+	toColumn: date_sales.date_sales_id
+
+relationship 531e95c4-2040-4a46-8f57-92dddb53b296
+	fromColumn: sales_fact.msme_key
+	toColumn: success_profile.msme_key
+
+relationship 55ac5539-588f-4ddb-8cc1-7ab30922013e
+	fromColumn: activity_fact.activity_date_id
+	toColumn: date_activity.activity_date_id
+
+relationship 45953240-7200-4e84-8bbc-8ccdac215b02
+	fromColumn: activity_fact.support_id
+	toColumn: support_activity.support_id
+
+relationship 536a61c1-c0a2-4987-bdaa-64d6261f394e
+	fromColumn: participant_updated.activity_id
+	toColumn: activity_fact.activity_id
+
+relationship 7acfe5da-8462-4d2b-b030-6c5dce6b08bd
+	fromColumn: participant_updated.msme_key
+	toColumn: success_profile.msme_key
+

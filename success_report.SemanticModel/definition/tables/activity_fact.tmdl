@@ -1,0 +1,96 @@
+table activity_fact
+	lineageTag: d81f130a-955f-4a05-9097-146ae288918a
+	sourceLineageTag: c87a6532-ae9b-480d-a82b-add7662ee249
+
+	column activity_id
+		dataType: string
+		isNullable: false
+		lineageTag: 52d27521-b375-43d2-9ead-938f17f52ffc
+		sourceLineageTag: 715ff82f-1be1-4196-a370-deb832b5564c
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: activity_id
+
+		annotation SummarizationSetBy = User
+
+	column support_id
+		dataType: string
+		lineageTag: d1eb1d6c-46bc-4525-9298-cc84669b75f0
+		sourceLineageTag: 02393268-368a-401f-8ec7-3f136f84fb05
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: support_id
+
+		annotation SummarizationSetBy = User
+
+	column partner_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 7694a38b-f915-4e8a-8154-7fb47ef1a06a
+		sourceLineageTag: 50aaf9d5-4c24-4961-acce-08d20d485180
+		dataCategory: Uncategorized
+		summarizeBy: sum
+		sourceColumn: partner_id
+
+		annotation SummarizationSetBy = User
+
+	column area_id
+		dataType: int64
+		formatString: 0
+		lineageTag: b8b2ce2d-cc6f-4dcb-ab56-f86992a4cc71
+		sourceLineageTag: 1a0a8c1d-a2ca-424e-8281-2a3c11c2d799
+		dataCategory: Uncategorized
+		summarizeBy: sum
+		sourceColumn: area_id
+
+		annotation SummarizationSetBy = User
+
+	column activity_theme
+		dataType: string
+		lineageTag: 1fcb972c-070b-443e-8cc0-29c483a04f31
+		sourceLineageTag: 91af0722-7b35-41c2-8a62-c5985848136b
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: activity_theme
+
+		annotation SummarizationSetBy = User
+
+	column activity_duration
+		dataType: int64
+		formatString: 0
+		lineageTag: c96fc1c7-6f0c-4de6-990f-bce8b5f37970
+		sourceLineageTag: 34703359-66b8-4bcf-a4c0-9d3083e5f042
+		dataCategory: Uncategorized
+		summarizeBy: sum
+		sourceColumn: activity_duration
+
+		annotation SummarizationSetBy = User
+
+	column attendance_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 8fefc688-9dec-4600-ba3d-909564341c98
+		sourceLineageTag: 4fcd4501-09f1-49e9-bd22-c7b2a422bf9f
+		dataCategory: Uncategorized
+		summarizeBy: sum
+		sourceColumn: attendance_number
+
+		annotation SummarizationSetBy = User
+
+	column activity_date_id
+		dataType: dateTime
+		formatString: General Number
+		lineageTag: 21de1ad8-354a-45c2-afc5-e233dd04b57a
+		sourceLineageTag: bd0aa028-ebb3-4af4-92e1-b79a6e43ab33
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: activity_date_id
+
+		annotation SummarizationSetBy = User
+
+	partition activity_fact = entity
+		mode: directQuery
+		source
+			entityName: activity_fact
+			expressionSource: 'DirectQuery to AS - SM_success'
+

@@ -1,0 +1,103 @@
+table hiring
+	lineageTag: 0eceb5fb-b7fa-4144-be5a-bf832b6c1e59
+	sourceLineageTag: f7185d64-4d9a-4a09-90e0-5c5453805688
+
+	column employee_key
+		dataType: string
+		lineageTag: edacaf05-b669-44d2-9b5f-93b31e5d0812
+		sourceLineageTag: f1cc58cb-ac76-4e75-94d9-f884d25f5e46
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: employee_key
+
+		annotation SummarizationSetBy = User
+
+	column job_key
+		dataType: string
+		isNullable: false
+		lineageTag: 875a8289-887e-4d5c-a18d-cb45afbe8442
+		sourceLineageTag: 6771471c-df69-48a1-8e65-2e07ee49336f
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: job_key
+
+		annotation SummarizationSetBy = User
+
+	column age
+		dataType: int64
+		formatString: 0
+		lineageTag: e223cd80-c170-40be-9713-5ed174e18f68
+		sourceLineageTag: b474437d-0c79-4dbb-ab85-11e21244a485
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: age
+
+		annotation SummarizationSetBy = User
+
+	column sex
+		dataType: string
+		lineageTag: e05910ee-fd9e-4671-9470-753672153939
+		sourceLineageTag: 53a4ab6d-e977-4fb0-8d62-1aa3b7dcc1c7
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: sex
+
+		annotation SummarizationSetBy = User
+
+	column contract_duration
+		dataType: int64
+		formatString: 0
+		lineageTag: fbcb3119-2c22-4a46-a5e1-6d2c213688fb
+		sourceLineageTag: b77fc637-d8b9-4a5e-bf3e-7e140e34296d
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: contract_duration
+
+		annotation SummarizationSetBy = User
+
+	column is_full_time
+		dataType: string
+		lineageTag: e47f757d-8b4d-44cb-86c6-29a5a87a7453
+		sourceLineageTag: 17741991-6adc-4b91-bf5b-bed1f63fae82
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: is_full_time
+
+		annotation SummarizationSetBy = User
+
+	column have_insurance
+		dataType: string
+		lineageTag: 54fbb8d1-eaa1-4e51-832a-55c318407f90
+		sourceLineageTag: d8a0f498-78e5-45cc-b863-63fc2f6ee77f
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: have_insurance
+
+		annotation SummarizationSetBy = User
+
+	column thanks_to_project_support
+		dataType: string
+		lineageTag: c50e4ba3-1e0d-46e5-94c7-b1d1fb5dec1a
+		sourceLineageTag: da2dbc3b-c16f-472f-81f8-34b818f3d0b9
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: thanks_to_project_support
+
+		annotation SummarizationSetBy = User
+
+	column is_decent_work
+		dataType: string
+		lineageTag: 436dbadf-8dc8-414d-b6da-80605dc28b51
+		sourceLineageTag: 4fd3108f-7e37-4553-91a9-e77473a191d6
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: is_decent_work
+
+		annotation SummarizationSetBy = User
+
+	partition hiring = entity
+		mode: directQuery
+		source
+			entityName: hiring
+			expressionSource: 'DirectQuery to AS - SM_success'
+

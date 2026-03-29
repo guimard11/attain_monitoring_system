@@ -1,0 +1,52 @@
+table firing
+	lineageTag: 4163fcb0-2095-46da-9925-6fa2eb515df9
+	sourceLineageTag: b91a95e6-dee6-436d-b095-137bca31a0df
+
+	column lic_key
+		dataType: string
+		lineageTag: c26dd179-7542-451f-b2c1-d12b6c1fedaf
+		sourceLineageTag: 905cb9ee-8924-44a0-91c5-48e81fd1cc50
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: lic_key
+
+		annotation SummarizationSetBy = User
+
+	column job_key
+		dataType: string
+		isNullable: false
+		lineageTag: 8091c099-5a05-4b3d-9617-410be625c36c
+		sourceLineageTag: fc6a338a-093e-4cd6-8eb4-a0fbfe2beea2
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: job_key
+
+		annotation SummarizationSetBy = User
+
+	column sex
+		dataType: string
+		lineageTag: f7eba67f-e069-40ae-b8ac-438844497ffe
+		sourceLineageTag: 424f9b62-329c-4990-a38d-7157f7186fca
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: sex
+
+		annotation SummarizationSetBy = User
+
+	column age
+		dataType: int64
+		formatString: 0
+		lineageTag: 8198d21a-c943-4284-9442-481d07ca46ab
+		sourceLineageTag: 20bad80e-034a-46b7-88b9-330112799dd7
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: age
+
+		annotation SummarizationSetBy = User
+
+	partition firing = entity
+		mode: directQuery
+		source
+			entityName: firing
+			expressionSource: 'DirectQuery to AS - SM_success'
+

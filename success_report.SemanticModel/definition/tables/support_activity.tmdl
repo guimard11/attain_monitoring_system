@@ -1,0 +1,31 @@
+table support_activity
+	lineageTag: 8c293497-3b47-418f-91c6-3ef701229e99
+	sourceLineageTag: 271a7cab-8586-417c-b799-811b8c64bb0c
+
+	column support_id
+		dataType: string
+		isNullable: false
+		lineageTag: 9f56bd9b-f0e1-45a1-af71-cc16058226c0
+		sourceLineageTag: ac018838-0ccb-43db-b74a-bb43782b09c8
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: support_id
+
+		annotation SummarizationSetBy = User
+
+	column support_name
+		dataType: string
+		lineageTag: 868f62fd-c9ef-4750-b795-12e6cdc74a39
+		sourceLineageTag: 132a7a5b-c934-4661-b7bb-9b5ec82fe5fc
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: support_name
+
+		annotation SummarizationSetBy = User
+
+	partition support_activity = entity
+		mode: directQuery
+		source
+			entityName: support_activity
+			expressionSource: 'DirectQuery to AS - SM_success'
+

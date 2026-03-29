@@ -1,0 +1,122 @@
+table 'Measures Table'
+	lineageTag: d442ec5e-d201-4d8d-88df-b1e6227a084b
+	sourceLineageTag: 12772024-ab6c-435c-8749-c41892dc2d06
+
+	measure Total_MSMEs = EXTERNALMEASURE("Total_MSMEs", INTEGER, "DirectQuery to AS - SM_success")
+		formatString: 0
+		lineageTag: a6e2b646-a50f-4852-af74-74b652f2a308
+		sourceLineageTag: 1754369b-d056-48e2-9530-ae3fe02d572e
+		dataCategory: Uncategorized
+
+	measure Total_jobs_created = EXTERNALMEASURE("Total_jobs_created", INTEGER, "DirectQuery to AS - SM_success")
+		formatString: 0
+		lineageTag: 3161e5b2-cf31-489f-a5ab-e1937652627c
+		sourceLineageTag: 059ce6e9-b723-4b45-aa68-64fb31ff190b
+		dataCategory: Uncategorized
+
+	measure Total_sales = EXTERNALMEASURE("Total_sales", INTEGER, "DirectQuery to AS - SM_success")
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: ef6fb55e-b90a-4f3c-a1b9-1f04f4c9666e
+		sourceLineageTag: 2cdaf3e5-d79f-4936-a917-3911ff68db54
+		dataCategory: Uncategorized
+
+		changedProperty = FormatString
+
+	measure Total_loan = EXTERNALMEASURE("Total_loan", DOUBLE, "DirectQuery to AS - SM_success")
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 76efc021-58d8-484a-a49e-3edb8ed712ce
+		sourceLineageTag: 970e6d3a-aa75-4199-8253-1df6907a8e28
+		dataCategory: Uncategorized
+
+		changedProperty = FormatString
+
+	measure MSME_target = 1.1*[Total_MSMEs]
+		formatString: 0
+		lineageTag: 7464a8f6-e6fe-4b31-b037-ea443392783b
+
+	measure Total_attendance = SUM(activity_fact[attendance_number])
+		formatString: 0
+		lineageTag: 936f32af-02af-428b-b45a-def8b208b184
+
+		changedProperty = Name
+
+	measure Total_training_days = (SUM(activity_fact[activity_duration])/8)
+		formatString: 0
+		lineageTag: ec83cc41-50a9-4ca4-8438-a776456a6bc5
+
+		changedProperty = Name
+
+		changedProperty = FormatString
+
+	measure Total_SME_loan_approved =
+			
+			CALCULATE(
+			    COUNTROWS(success_profile),
+			    success_profile[financial_institution] = "yes"
+			)
+		formatString: 0
+		lineageTag: 7199fe82-efbe-4d9c-b2cf-e8fcd62ff8fd
+
+		changedProperty = Name
+
+	measure Current_month_sales = CALCULATE([Total_sales],DATESMTD(date_sales[date_sales_id]))
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: f18a580c-2985-4241-8ed6-d16ad8342409
+
+		changedProperty = Name
+
+		changedProperty = FormatString
+
+	measure Last_month_sales = CALCULATE([Total_sales],DATEADD(date_sales[date_sales_id],-1,MONTH))
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 14e39a78-9ac8-4c76-9bbd-83875831c433
+
+		changedProperty = Name
+
+		changedProperty = FormatString
+
+	measure Sales_target = ([Total_sales]*1.05)
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: db9b8868-d369-4dfa-b2e1-5354780d2aec
+
+		changedProperty = Name
+
+		changedProperty = FormatString
+
+	measure job_created_target = ([Total_jobs_created]*1.1)
+		formatString: 0
+		lineageTag: c9f4137b-644e-4da1-a9da-b0e9afbe52f3
+
+		changedProperty = Name
+
+		changedProperty = FormatString
+
+	measure Current_month_job = CALCULATE([Total_jobs_created],DATESMTD(date_job[date_job_id]))
+		formatString: 0
+		lineageTag: db78f23d-a71a-4bda-b408-cd61fedfce60
+
+		changedProperty = Name
+
+	measure Last_month_job = CALCULATE([Total_jobs_created],DATEADD(date_job[date_job_id],-1,MONTH))
+		formatString: 0
+		lineageTag: 28db51da-4fd5-411c-a588-22b3be78b23b
+
+		changedProperty = Name
+
+	column Value
+		dataType: int64
+		formatString: 0
+		lineageTag: 8863cf87-ffd5-4d79-a73c-8f5d14070125
+		sourceLineageTag: 42b77086-6593-4458-824c-80feb272c6ee
+		dataCategory: Uncategorized
+		summarizeBy: sum
+		sourceColumn: Value
+
+		annotation SummarizationSetBy = User
+
+	partition 'Measures Table' = entity
+		mode: directQuery
+		source
+			entityName: Measures Table
+			expressionSource: 'DirectQuery to AS - SM_success'
+

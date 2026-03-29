@@ -1,0 +1,70 @@
+table date_job
+	lineageTag: 28127e8e-5c61-42c6-8a09-93b725ebe291
+	sourceLineageTag: e95a9aa4-d2e4-4d58-9b52-bf0272003d65
+
+	column date_job_id
+		dataType: dateTime
+		isNullable: false
+		formatString: m/d/yyyy
+		lineageTag: 8458e4d4-a75c-4a62-98c7-f4f09110e26e
+		sourceLineageTag: e0373b38-f9cc-47d4-9ee7-8a5007629072
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: date_job_id
+
+		changedProperty = FormatString
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column day
+		dataType: int64
+		formatString: 0
+		lineageTag: 05993d5d-ae94-46f7-97d4-d3b8efaf8e8b
+		sourceLineageTag: 38c547c9-d1c4-4c9e-b656-ff217a402c34
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: day
+
+		annotation SummarizationSetBy = User
+
+	column month
+		dataType: int64
+		formatString: 0
+		lineageTag: d9e15657-d4e4-4096-a899-e65029af902f
+		sourceLineageTag: 32e2bd3e-dd05-47b0-aa79-94fe445cd0fb
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: month
+
+		annotation SummarizationSetBy = User
+
+	column quarter
+		dataType: int64
+		formatString: 0
+		lineageTag: c561fc4e-88b0-4e12-9549-2d5a3c078512
+		sourceLineageTag: 307a715d-dce9-441b-aaf4-ac182bc1f7d3
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: quarter
+
+		annotation SummarizationSetBy = User
+
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: 6c736670-25cf-45f5-a73f-805e1d050872
+		sourceLineageTag: 4abab30c-5b03-4e0f-9870-1a51f3ae03e7
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: year
+
+		annotation SummarizationSetBy = User
+
+	partition date_job = entity
+		mode: directQuery
+		source
+			entityName: date_job
+			expressionSource: 'DirectQuery to AS - SM_success'
+

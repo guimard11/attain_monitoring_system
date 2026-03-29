@@ -1,0 +1,112 @@
+table success_profile
+	lineageTag: 5546370b-50de-4a8e-9d70-01ebf0802d04
+	sourceLineageTag: dfbb2770-82e1-4b7f-9bf9-939084ecd22f
+
+	column msme_key
+		dataType: string
+		isNullable: false
+		lineageTag: 7cc4ee7b-3eae-4972-949f-126cbe9fe84b
+		sourceLineageTag: 74ac8b10-dfd1-43b5-8300-26ba2ad55da0
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: msme_key
+
+		annotation SummarizationSetBy = User
+
+	column business_partner
+		dataType: string
+		lineageTag: 698148a4-3edd-4e8a-9345-5b421b26c694
+		sourceLineageTag: e85f9bab-6ac9-4cca-a57a-a22ae460fbd2
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: business_partner
+
+		annotation SummarizationSetBy = User
+
+	column departement
+		dataType: string
+		lineageTag: a2e3d527-43f2-4be3-8b67-b16a15a8b350
+		sourceLineageTag: 383b3ba0-0b55-46de-8d82-eea74fe0b27a
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: departement
+
+		annotation SummarizationSetBy = User
+
+	column financial_institution
+		dataType: string
+		lineageTag: 885b9376-abed-4fdc-83e1-994ef0ed8f9e
+		sourceLineageTag: d6d0f61d-ea52-4fb9-9863-670c1140131c
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: financial_institution
+
+		annotation SummarizationSetBy = User
+
+	column business_owner_sex
+		dataType: string
+		lineageTag: 3682e9b8-383c-4d3d-a735-80c6192a067f
+		sourceLineageTag: 99d3d5d4-1c9a-4b86-a173-5a8cd205ef5c
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: business_owner_sex
+
+		annotation SummarizationSetBy = User
+
+	column business_owner_age
+		dataType: int64
+		formatString: 0
+		lineageTag: de4aa29d-7d4f-4c93-a4fd-a8794ea9a186
+		sourceLineageTag: 6d5c42d8-be26-45a5-a088-7a054232aff6
+		dataCategory: Uncategorized
+		summarizeBy: sum
+		sourceColumn: business_owner_age
+
+		annotation SummarizationSetBy = User
+
+	column msme_productive
+		dataType: string
+		lineageTag: 8a2657d3-85b4-4ce4-8040-69c17cb12538
+		sourceLineageTag: 77ecbc97-a92b-4e3e-a1a7-186ea467bf40
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: msme_productive
+
+		annotation SummarizationSetBy = User
+
+	column msme_category
+		dataType: string
+		lineageTag: f973996e-a14f-4c0e-8b05-a1cc8ff4f240
+		sourceLineageTag: 769d5d70-f146-4895-aef9-85ac288dfe05
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: msme_category
+
+		annotation SummarizationSetBy = User
+
+	column industry
+		dataType: string
+		lineageTag: b22cb81c-db2a-4621-9bf6-9ecc298930eb
+		sourceLineageTag: aa762748-4904-4d5c-b5c6-f39ba321cbfc
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: industry
+
+		annotation SummarizationSetBy = User
+
+	column savings_group
+		dataType: string
+		lineageTag: 30fd212d-2cb2-4ad7-a396-20e3083c8156
+		sourceLineageTag: b75ac463-258e-4780-894a-d81bbcc89914
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: savings_group
+
+		annotation SummarizationSetBy = User
+
+	partition success_profile = entity
+		mode: directQuery
+		source
+			entityName: success_profile
+			expressionSource: 'DirectQuery to AS - SM_success'
+

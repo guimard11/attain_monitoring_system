@@ -1,0 +1,63 @@
+table job_fact
+	lineageTag: 40ffbd12-ba3e-4167-ab30-e456397ec8fa
+	sourceLineageTag: 2c6a8a98-1b22-4f85-b2fb-8ef0ecb0b9ed
+
+	column job_key
+		dataType: string
+		lineageTag: 3a1018c8-3d56-4677-b0a3-0d689b7cf12f
+		sourceLineageTag: c781e508-0b4a-4428-ad2e-89d279f9e008
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: job_key
+
+		annotation SummarizationSetBy = User
+
+	column msme_key
+		dataType: string
+		lineageTag: 74f700c1-3795-473c-b83a-bc969596d3d4
+		sourceLineageTag: 52f7a1bb-59e3-4afa-972a-befef1ab0b7f
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: msme_key
+
+		annotation SummarizationSetBy = User
+
+	column date_job_id
+		dataType: dateTime
+		formatString: General Number
+		lineageTag: b724347c-955b-422f-bddd-ef948be01fc3
+		sourceLineageTag: ff561e9d-f7b4-461d-a048-060e183dcdc9
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: date_job_id
+
+		annotation SummarizationSetBy = User
+
+	column total_hired_employee
+		dataType: int64
+		formatString: 0
+		lineageTag: 34170eb9-c252-43dd-8ef4-7df06aaf6711
+		sourceLineageTag: 0b32d90e-0997-4261-a8b4-8bec639bebd5
+		dataCategory: Uncategorized
+		summarizeBy: sum
+		sourceColumn: total_hired_employee
+
+		annotation SummarizationSetBy = User
+
+	column total_fired_employee
+		dataType: int64
+		formatString: 0
+		lineageTag: ae8048dd-4b77-4129-85f6-40576b058eb5
+		sourceLineageTag: 3d3c1d72-bbe6-4e6a-be34-70a5ed461839
+		dataCategory: Uncategorized
+		summarizeBy: sum
+		sourceColumn: total_fired_employee
+
+		annotation SummarizationSetBy = User
+
+	partition job_fact = entity
+		mode: directQuery
+		source
+			entityName: job_fact
+			expressionSource: 'DirectQuery to AS - SM_success'
+

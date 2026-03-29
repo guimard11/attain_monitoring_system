@@ -1,0 +1,62 @@
+table sales_fact
+	lineageTag: 40701ebb-574a-41ef-b4b4-5d2cdda30ef0
+	sourceLineageTag: 60019a83-195d-4053-8998-69704156c992
+
+	column sales_key
+		dataType: string
+		lineageTag: fa524b82-deb0-4bf9-98a5-c11337640c4a
+		sourceLineageTag: 87a45f29-e72c-4398-be8b-432f618242dd
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: sales_key
+
+		annotation SummarizationSetBy = User
+
+	column msme_key
+		dataType: string
+		lineageTag: 1d5cec05-fbf2-438e-8176-4b0419783182
+		sourceLineageTag: 099ffac5-b8b0-45a6-b6c1-a4be243b752c
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: msme_key
+
+		annotation SummarizationSetBy = User
+
+	column date_sales_id
+		dataType: dateTime
+		formatString: General Number
+		lineageTag: f8262985-df95-4ce3-8a08-2784b16ac25e
+		sourceLineageTag: ec345ef1-6517-4def-923d-2fe19abf0932
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: date_sales_id
+
+		annotation SummarizationSetBy = User
+
+	column domestic_sale
+		dataType: int64
+		formatString: 0
+		lineageTag: 68cd2598-b8a4-420c-a4c0-a2a67be01ec5
+		sourceLineageTag: 2a1e6bd8-f63c-40a3-a6f8-83c4cd744e03
+		dataCategory: Uncategorized
+		summarizeBy: sum
+		sourceColumn: domestic_sale
+
+		annotation SummarizationSetBy = User
+
+	column international_sale
+		dataType: string
+		lineageTag: 103d6731-6448-42a8-b3eb-9ef7f7724bad
+		sourceLineageTag: 83087062-8d82-4066-894c-c7562f94463f
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: international_sale
+
+		annotation SummarizationSetBy = User
+
+	partition sales_fact = entity
+		mode: directQuery
+		source
+			entityName: sales_fact
+			expressionSource: 'DirectQuery to AS - SM_success'
+

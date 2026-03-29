@@ -1,0 +1,66 @@
+table date_activity
+	lineageTag: a9c079b8-3095-4312-b91a-6b0705636faf
+	sourceLineageTag: 02138885-c3e5-44a8-b282-62a003ec43ac
+
+	column activity_date_id
+		dataType: dateTime
+		isNullable: false
+		formatString: General Number
+		lineageTag: b72608ea-38f4-428f-8396-f7538b7da83e
+		sourceLineageTag: 3ca9203c-7dfc-49d3-9c06-2b728562ce4e
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: activity_date_id
+
+		annotation SummarizationSetBy = User
+
+	column day_activity
+		dataType: int64
+		formatString: 0
+		lineageTag: b7d2ba1f-bf0e-47de-bbe6-6c31d74eb9b8
+		sourceLineageTag: 460aa00b-e37c-401c-b1a1-ae204b03c989
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: day_activity
+
+		annotation SummarizationSetBy = User
+
+	column month_activity
+		dataType: int64
+		formatString: 0
+		lineageTag: 6d6d8e9e-ebac-41f7-8aba-9f7fc09a09b4
+		sourceLineageTag: a3fcff54-e0a2-40e5-810b-c6184b1325af
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: month_activity
+
+		annotation SummarizationSetBy = User
+
+	column quarter_activity
+		dataType: int64
+		formatString: 0
+		lineageTag: 8d5ba140-a9ef-4d7b-a148-6c70f92db81c
+		sourceLineageTag: 21c76ae5-276a-4561-a914-405f3e477023
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: quarter_activity
+
+		annotation SummarizationSetBy = User
+
+	column year_activity
+		dataType: int64
+		formatString: 0
+		lineageTag: 6fef6930-a1ea-4000-95a7-023d6423497d
+		sourceLineageTag: a12a41f1-90f4-456d-8c6b-46a1b5daa5d2
+		dataCategory: Uncategorized
+		summarizeBy: none
+		sourceColumn: year_activity
+
+		annotation SummarizationSetBy = User
+
+	partition date_activity = entity
+		mode: directQuery
+		source
+			entityName: date_activity
+			expressionSource: 'DirectQuery to AS - SM_success'
+

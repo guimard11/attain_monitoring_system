@@ -1,0 +1,29 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["DirectQuery to AS - SM_success"]
+
+ref table firing
+ref table support_activity
+ref table date_sales
+ref table date_job
+ref table success_fact
+ref table job_fact
+ref table date_success
+ref table date_activity
+ref table sales_fact
+ref table hiring
+ref table activity_fact
+ref table 'Measures Table'
+ref table participant_updated
+ref table success_profile
+
+ref cultureInfo en-US
+
