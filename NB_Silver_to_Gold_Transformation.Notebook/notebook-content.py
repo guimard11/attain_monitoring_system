@@ -136,79 +136,12 @@ date_success = success_silver.select("registration_date", "day", "month", "quart
 
 # MARKDOWN ********************
 
-# ###### Creation of the partner dimension table from success_updated
+# ###### Creation of success_profile as dimension table
 
 # CELL ********************
 
-partner_success = success_silver.select("business_partner", "financial_institution").distinct()\
-                                 .withColumn("partner_id", row_number().over(Window.orderBy("business_partner", "financial_institution")))
-
-# METADATA ********************
-
-# META {
-# META   "language": "python",
-# META   "language_group": "synapse_pyspark"
-# META }
-
-# MARKDOWN ********************
-
-# ###### Creation of the project intervention area dimension table
-
-# CELL ********************
-
-area_success = success_silver.select("departement").distinct()\
-                                 .withColumn("area_id", row_number().over(Window.orderBy("departement")))
-
-# METADATA ********************
-
-# META {
-# META   "language": "python",
-# META   "language_group": "synapse_pyspark"
-# META }
-
-# MARKDOWN ********************
-
-# ###### Creation of industry and MSME category dimension table
-
-# CELL ********************
-
-industry_success = success_silver.select("industry").distinct()\
-                                 .withColumn("industry_id", row_number().over(Window.orderBy("industry")))
-
-# METADATA ********************
-
-# META {
-# META   "language": "python",
-# META   "language_group": "synapse_pyspark"
-# META }
-
-# MARKDOWN ********************
-
-# ###### Creation of type of Savings group dimension table
-
-# CELL ********************
-
-savings_success = success_silver.select("savings_group").distinct()\
-                                 .withColumn("savings_id", row_number().over(Window.orderBy("savings_group")))
-
-# METADATA ********************
-
-# META {
-# META   "language": "python",
-# META   "language_group": "synapse_pyspark"
-# META }
-
-# MARKDOWN ********************
-
-# ###### Linking all dimension tables to success_silver dataset adding the primary keys.
-
-# CELL ********************
-
-# Join the dimension tables to the original dataframe success_silver
-success_silver = success_silver.join(partner_success, ["business_partner", "financial_institution"], "left")\
-                               .join(area_success, ["departement"], "left")\
-                               .join(industry_success, ["industry"], "left")\
-                               .join(savings_success, ["savings_group"], "left" )
+# Select all required variables to create the fact table success_fact
+success_profile = success_silver.select("msme_key", "business_partner", "departement", "financial_institution", "business_owner_sex", "business_owner_age", "msme_productive", "msme_category", "industry", "savings_group")
 
 # METADATA ********************
 
@@ -224,7 +157,7 @@ success_silver = success_silver.join(partner_success, ["business_partner", "fina
 # CELL ********************
 
 # Select all required variables to create the fact table success_fact
-success_fact = success_silver.select("msme_key", "registration_date", "partener_id", "area_id", "industry_id", "savings_id", "business_owner_sex", "business_owner_age", "msme_productive", "msme_category", "annual_income", "employee_number", "loan_amount")\
+success_fact = success_silver.select("msme_key", "registration_date", "annual_income", "employee_number", "loan_amount")\
                              .withColumnRenamed("registration_date", "registration_date_id")
 
 # METADATA ********************
@@ -242,18 +175,12 @@ success_fact = success_silver.select("msme_key", "registration_date", "partener_
 
 # Generate each of path related to every table.
 gold_success_fact_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_gold.Lakehouse/Tables/dbo/success_fact"
-gold_savings_success_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_gold.Lakehouse/Tables/dbo/savings_success"
-gold_industry_success_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_gold.Lakehouse/Tables/dbo/industry_success"
-gold_area_success_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_gold.Lakehouse/Tables/dbo/area_success"
-gold_partner_success_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_gold.Lakehouse/Tables/dbo/partner_success"
+gold_success_profile_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_gold.Lakehouse/Tables/dbo/success_profile"
 gold_date_success_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_gold.Lakehouse/Tables/dbo/date_success"
 
 # Save the tables into the gold Lakehouse
-success_fact.write.format("delta").mode("overwrite").save(gold_success_fact_path)
-savings_success.write.format("delta").mode("overwrite").save(gold_savings_success_path)
-industry_success.write.format("delta").mode("overwrite").save(gold_industry_success_path)
-area_success.write.format("delta").mode("overwrite").save(gold_area_success_path)
-partner_success.write.format("delta").mode("overwrite").save(gold_partner_success_path)
+success_fact.write.format("delta").option("overwriteSchema", "true").mode("overwrite").save(gold_success_fact_path)
+success_profile.write.format("delta").mode("overwrite").save(gold_success_profile_path)
 date_success.write.format("delta").mode("overwrite").save(gold_date_success_path)
 
 # METADATA ********************
@@ -341,22 +268,14 @@ partner_mapping = {
     "kn1": 16
 }
 
-department_mapping = {
-    "Nord": 5,
-    "Sud": 8,
-    "Centre": 2
-}
-
 # Convert dictionaries to Spark map expressions
 partner_map_expr = create_map([lit(x) for x in chain(*partner_mapping.items())])
-department_map_expr = create_map([lit(x) for x in chain(*department_mapping.items())])
 
 # Apply transformations
 activity_updated = (
     activity_updated
     .withColumn("partner_id", partner_map_expr[col("partner_key")])
-    .withColumn("area_id", department_map_expr[col("department")])
-    .drop("partner_key", "department")
+    .drop("partner_key")
 )
 
 # METADATA ********************
@@ -375,7 +294,7 @@ activity_updated = (
 # CELL ********************
 
 # Select all required variables to create the fact table activity_fact
-activity_fact = activity_updated.select('activity_id', 'activity_date', 'support_type', 'partner_id', 'area_id', 'activity_theme', 'activity_duration', 'attendance_number')\
+activity_fact = activity_updated.select('activity_id', 'activity_date', 'support_type', 'partner_id', 'activity_theme', 'activity_duration', 'attendance_number')\
                              .withColumnRenamed('support_type', "support_id")\
                              .withColumnRenamed('activity_date', 'activity_date_id')
 
@@ -710,7 +629,7 @@ participant_updated = spark.read.format("delta").load(participant_updated_path)
 gold_participant_updated_path = "abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_gold.Lakehouse/Tables/dbo/participant_updated"
 
 # Save the tables into the gold Lakehouse
-participant_updated.write.format("delta").mode("overwrite").save(gold_participant_path)
+participant_updated.write.format("delta").mode("overwrite").save(gold_participant_updated_path)
 
 # METADATA ********************
 
