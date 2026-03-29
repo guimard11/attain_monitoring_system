@@ -308,6 +308,18 @@ success_updated = success_updated.withColumn("revenu_annuel", when(col("revenu_a
 
 # CELL ********************
 
+#Reorganize the structure of success_job dataset by filtering out all null value in date column.
+success_job=success_job.filter(col("date_collecte").isNotNull())
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
 # Rename the dataset to capture all process operations in a new one.
 
 job_updated = success_job.withColumn("nbre_employe_embauche", when(col("nbre_employe_embauche").isNull(), 0)\
@@ -457,17 +469,6 @@ activity_updated = success_activity2.withColumn("activity_duration", round(col("
 # MARKDOWN ********************
 
 # ##### Saving and writing stage
-
-# CELL ********************
-
-abfss://success_pipeline@onelake.dfs.fabric.microsoft.com/LH_success_silver.Lakehouse/Tables
-
-# METADATA ********************
-
-# META {
-# META   "language": "python",
-# META   "language_group": "synapse_pyspark"
-# META }
 
 # MARKDOWN ********************
 
