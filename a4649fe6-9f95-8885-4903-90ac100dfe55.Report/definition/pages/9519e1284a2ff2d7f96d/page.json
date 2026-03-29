@@ -1,0 +1,15 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "9519e1284a2ff2d7f96d",
+  "displayName": "Activity",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280,
+  "visualInteractions": [
+    {
+      "source": "4d45517ec030883bbb9a",
+      "target": "6e8f1c700112248ed27c",
+      "type": "NoFilter"
+    }
+  ]
+}
