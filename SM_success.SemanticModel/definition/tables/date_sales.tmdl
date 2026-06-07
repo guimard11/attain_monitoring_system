@@ -1,0 +1,61 @@
+table date_sales
+	lineageTag: efec2295-35b8-4f0f-bde4-0b5f6242d37a
+	sourceLineageTag: [dbo].[date_sales]
+
+	column date_sales_id
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 6531e747-0866-48f8-8250-fcb61c937ed4
+		sourceLineageTag: date_sales_id
+		summarizeBy: none
+		sourceColumn: date_sales_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_sales_reporting
+		dataType: int64
+		formatString: 0
+		lineageTag: 9f2e6348-d8cf-4f95-8e13-1594b8f90ee4
+		sourceLineageTag: day_sales_reporting
+		summarizeBy: none
+		sourceColumn: day_sales_reporting
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_sales_reporting
+		dataType: int64
+		formatString: 0
+		lineageTag: 342fd5db-3203-4496-bf24-17bf83bb6549
+		sourceLineageTag: month_sales_reporting
+		summarizeBy: none
+		sourceColumn: month_sales_reporting
+
+		annotation SummarizationSetBy = Automatic
+
+	column quarter_sales_reporting
+		dataType: int64
+		formatString: 0
+		lineageTag: ba82c870-8c17-4e12-b7b8-c9e32be51e00
+		sourceLineageTag: quarter_sales_reporting
+		summarizeBy: none
+		sourceColumn: quarter_sales_reporting
+
+		annotation SummarizationSetBy = Automatic
+
+	column year_sales_reporting
+		dataType: int64
+		formatString: 0
+		lineageTag: b00ab878-2bb6-4efe-a5f6-98f0f8b1fc80
+		sourceLineageTag: year_sales_reporting
+		summarizeBy: none
+		sourceColumn: year_sales_reporting
+
+		annotation SummarizationSetBy = Automatic
+
+	partition date_sales = entity
+		mode: directLake
+		source
+			entityName: date_sales
+			schemaName: dbo
+			expressionSource: 'DirectLake - LH_success_gold'
+

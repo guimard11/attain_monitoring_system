@@ -1,0 +1,95 @@
+table sales_fact
+	lineageTag: 62ab480c-b2f1-4968-91f8-62035d16ecae
+	sourceLineageTag: [dbo].[sales_fact]
+
+	measure Total_Sales = SUM(sales_fact[domestic_sale])
+		formatString: 0
+		displayFolder: KPIs
+		lineageTag: 0c727793-2649-4091-95e8-7d921fc55416
+
+		changedProperty = Name
+
+		changedProperty = DisplayFolder
+
+	measure Sales_target = ([Total_sales]*1.05)
+		displayFolder: KPIs
+		lineageTag: b52f8515-25fb-4632-b132-d60b9edeced0
+
+		changedProperty = DisplayFolder
+
+		changedProperty = Name
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Last_month_sales = CALCULATE([Total_sales],DATEADD(date_sales[date_sales_id],-1,MONTH))
+		formatString: 0
+		displayFolder: KPIs
+		lineageTag: cb7166b4-012d-4f8f-9da9-776d8b77235c
+
+		changedProperty = DisplayFolder
+
+		changedProperty = Name
+
+	measure Current_month_sales = CALCULATE([Total_sales],DATESMTD(date_sales[date_sales_id]))
+		formatString: 0
+		displayFolder: KPIs
+		lineageTag: 54351b88-0efc-47e2-a28b-236e4e206a58
+
+		changedProperty = DisplayFolder
+
+		changedProperty = Name
+
+	column sales_key
+		dataType: string
+		lineageTag: a15ebe4d-dcbf-4d84-9d39-af1333433d1e
+		sourceLineageTag: sales_key
+		summarizeBy: none
+		sourceColumn: sales_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column msme_key
+		dataType: string
+		lineageTag: f5ededd4-5fd0-4371-9f52-50515a603f02
+		sourceLineageTag: msme_key
+		summarizeBy: none
+		sourceColumn: msme_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_sales_id
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: b00f66f3-4595-44b8-a8d3-4af829e0e648
+		sourceLineageTag: date_sales_id
+		summarizeBy: none
+		sourceColumn: date_sales_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column domestic_sale
+		dataType: int64
+		formatString: 0
+		lineageTag: c308df20-1833-42f9-899f-1eb0ba704dc3
+		sourceLineageTag: domestic_sale
+		summarizeBy: sum
+		sourceColumn: domestic_sale
+
+		annotation SummarizationSetBy = Automatic
+
+	column international_sale
+		dataType: string
+		lineageTag: 6860ae21-0403-4a1e-b74c-afda832a27fe
+		sourceLineageTag: international_sale
+		summarizeBy: none
+		sourceColumn: international_sale
+
+		annotation SummarizationSetBy = Automatic
+
+	partition sales_fact = entity
+		mode: directLake
+		source
+			entityName: sales_fact
+			schemaName: dbo
+			expressionSource: 'DirectLake - LH_success_gold'
+

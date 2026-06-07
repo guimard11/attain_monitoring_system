@@ -1,0 +1,106 @@
+table job_fact
+	lineageTag: 528dadc5-5a4e-4bde-bcad-59319ba90685
+	sourceLineageTag: [dbo].[job_fact]
+
+	measure Total_jobs_created = SUM(job_fact[total_hired_employee])
+		formatString: 0
+		displayFolder: KPIs
+		lineageTag: 1fc86eff-4691-45f9-8df4-b5ec9beea168
+
+		changedProperty = Name
+
+		changedProperty = DisplayFolder
+
+	measure Last_month_job = CALCULATE([Total_jobs_created],DATEADD(date_job[date_job_id],-1,MONTH))
+		formatString: 0
+		displayFolder: KPIs
+		lineageTag: ffff48e0-7033-4358-907b-f80358ca9ed4
+
+		changedProperty = DisplayFolder
+
+		changedProperty = Name
+
+	measure job_created_target = ([Total_jobs_created]*1.1)
+		displayFolder: KPIs
+		lineageTag: f055aa07-9594-4894-b8d4-cce4102ff818
+
+		changedProperty = DisplayFolder
+
+		changedProperty = Name
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Current_month_job = CALCULATE([Total_jobs_created],DATESMTD(date_job[date_job_id]))
+		formatString: 0
+		displayFolder: KPIs
+		lineageTag: 7a5d032d-f943-4618-9383-54b73e5c9df9
+
+		changedProperty = DisplayFolder
+
+		changedProperty = Name
+
+	measure job_target = ([Total_jobs_created]*1.15)
+		displayFolder: KPIs
+		lineageTag: 10832006-4a5d-449a-9cb7-3f065d644fc8
+
+		changedProperty = DisplayFolder
+
+		changedProperty = Name
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column job_key
+		dataType: string
+		lineageTag: 7657fe55-64a7-4553-a128-402b64f6198c
+		sourceLineageTag: job_key
+		summarizeBy: none
+		sourceColumn: job_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column msme_key
+		dataType: string
+		lineageTag: a2819c3a-3418-4dab-a597-5d77af896f70
+		sourceLineageTag: msme_key
+		summarizeBy: none
+		sourceColumn: msme_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_job_id
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: d4163f90-09e6-454d-8f21-37fe56c48c8e
+		sourceLineageTag: date_job_id
+		summarizeBy: none
+		sourceColumn: date_job_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_hired_employee
+		dataType: int64
+		formatString: 0
+		lineageTag: 43b2498c-60a2-4050-9776-dc3fac8f3bc1
+		sourceLineageTag: total_hired_employee
+		summarizeBy: sum
+		sourceColumn: total_hired_employee
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_fired_employee
+		dataType: int64
+		formatString: 0
+		lineageTag: b8bf09a8-0e9e-4827-a56e-6a82c73c69ae
+		sourceLineageTag: total_fired_employee
+		summarizeBy: sum
+		sourceColumn: total_fired_employee
+
+		annotation SummarizationSetBy = Automatic
+
+	partition job_fact = entity
+		mode: directLake
+		source
+			entityName: job_fact
+			schemaName: dbo
+			expressionSource: 'DirectLake - LH_success_gold'
+

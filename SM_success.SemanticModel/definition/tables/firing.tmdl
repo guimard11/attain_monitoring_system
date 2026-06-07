@@ -1,0 +1,48 @@
+table firing
+	lineageTag: 6b8b2614-dd64-40e9-b132-d3939c0a7cfa
+	sourceLineageTag: [dbo].[firing]
+
+	column lic_key
+		dataType: string
+		lineageTag: 19ad36f2-b1d5-4ccc-9f04-dbab782a02f0
+		sourceLineageTag: lic_key
+		summarizeBy: none
+		sourceColumn: lic_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column job_key
+		dataType: string
+		lineageTag: ff7e4961-6196-451a-a0a8-2590d66609ec
+		sourceLineageTag: job_key
+		summarizeBy: none
+		sourceColumn: job_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column sex
+		dataType: string
+		lineageTag: b0bd620e-09c9-43a4-aecd-1b293015bcca
+		sourceLineageTag: sex
+		summarizeBy: none
+		sourceColumn: sex
+
+		annotation SummarizationSetBy = Automatic
+
+	column age
+		dataType: int64
+		formatString: 0
+		lineageTag: 163c2117-e19e-4603-9fcd-8246b9235664
+		sourceLineageTag: age
+		summarizeBy: none
+		sourceColumn: age
+
+		annotation SummarizationSetBy = Automatic
+
+	partition firing = entity
+		mode: directLake
+		source
+			entityName: firing
+			schemaName: dbo
+			expressionSource: 'DirectLake - LH_success_gold'
+

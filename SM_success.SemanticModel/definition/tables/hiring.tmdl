@@ -1,0 +1,94 @@
+table hiring
+	lineageTag: 1c9ac558-7e54-4a1c-820e-1527c60e8538
+	sourceLineageTag: [dbo].[hiring]
+
+	column employee_key
+		dataType: string
+		lineageTag: 2428349c-a538-4bfa-9db5-62f7d17e592f
+		sourceLineageTag: employee_key
+		summarizeBy: none
+		sourceColumn: employee_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column job_key
+		dataType: string
+		lineageTag: 70187e10-403b-4191-9777-b5f1de8e9d74
+		sourceLineageTag: job_key
+		summarizeBy: none
+		sourceColumn: job_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column age
+		dataType: int64
+		formatString: 0
+		lineageTag: e0e7fc34-ec83-4f14-bccf-6c0c1669f8ad
+		sourceLineageTag: age
+		summarizeBy: sum
+		sourceColumn: age
+
+		annotation SummarizationSetBy = Automatic
+
+	column sex
+		dataType: string
+		lineageTag: 39bdf966-37b3-43b1-87c2-c6488f2592d5
+		sourceLineageTag: sex
+		summarizeBy: none
+		sourceColumn: sex
+
+		annotation SummarizationSetBy = Automatic
+
+	column contract_duration
+		dataType: int64
+		formatString: 0
+		lineageTag: 9f23e266-2a70-4edd-adc3-c76506d596ba
+		sourceLineageTag: contract_duration
+		summarizeBy: sum
+		sourceColumn: contract_duration
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_full_time
+		dataType: string
+		lineageTag: 6db42334-b477-41d2-bf2b-c5cffa0b16f9
+		sourceLineageTag: is_full_time
+		summarizeBy: none
+		sourceColumn: is_full_time
+
+		annotation SummarizationSetBy = Automatic
+
+	column have_insurance
+		dataType: string
+		lineageTag: 218c15d9-806f-445b-b03a-9699826831de
+		sourceLineageTag: have_insurance
+		summarizeBy: none
+		sourceColumn: have_insurance
+
+		annotation SummarizationSetBy = Automatic
+
+	column thanks_to_project_support
+		dataType: string
+		lineageTag: e5302b46-8f4c-4c52-8279-42df6b3a1c6c
+		sourceLineageTag: thanks_to_project_support
+		summarizeBy: none
+		sourceColumn: thanks_to_project_support
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_decent_work
+		dataType: string
+		lineageTag: 3ac5d889-f3e8-46d1-a267-044011900e16
+		sourceLineageTag: is_decent_work
+		summarizeBy: none
+		sourceColumn: is_decent_work
+
+		annotation SummarizationSetBy = Automatic
+
+	partition hiring = entity
+		mode: directLake
+		source
+			entityName: hiring
+			schemaName: dbo
+			expressionSource: 'DirectLake - LH_success_gold'
+

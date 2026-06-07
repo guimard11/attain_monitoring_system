@@ -1,0 +1,29 @@
+table participant_updated
+	lineageTag: 407647a7-5a9d-4edf-9b5e-fd7871a49b18
+	sourceLineageTag: [dbo].[participant_updated]
+
+	column activity_id
+		dataType: string
+		lineageTag: ad6097ed-c065-4619-ac5c-b943f7b74d0d
+		sourceLineageTag: activity_id
+		summarizeBy: none
+		sourceColumn: activity_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column msme_key
+		dataType: string
+		lineageTag: 81da0efd-17ff-4ed3-b258-908ebdec8b3e
+		sourceLineageTag: msme_key
+		summarizeBy: none
+		sourceColumn: msme_key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition participant_updated = entity
+		mode: directLake
+		source
+			entityName: participant_updated
+			schemaName: dbo
+			expressionSource: 'DirectLake - LH_success_gold'
+

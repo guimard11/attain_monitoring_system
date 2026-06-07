@@ -1,0 +1,135 @@
+table success_profile
+	lineageTag: 068d064c-6b12-4a6e-b883-609cb5d4a675
+	sourceLineageTag: [dbo].[success_profile]
+
+	measure Total_SME_loan_approved =
+			
+			CALCULATE(
+			    COUNTROWS(success_profile),
+			    success_profile[financial_institution] = "yes"
+			)
+		formatString: 0
+		displayFolder: KPIs
+		lineageTag: 6d457193-71c1-477b-96ce-ea69b09b9f0e
+
+		changedProperty = Name
+
+		changedProperty = DisplayFolder
+
+	measure Total_MSMEs = COUNTROWS(success_profile)
+		formatString: 0
+		displayFolder: KPIs
+		lineageTag: 8113b52c-1550-46ee-9a4b-7f4eb62f3c48
+
+		changedProperty = Name
+
+		changedProperty = DisplayFolder
+
+	measure MSME_target = 1.1*[Total_MSMEs]
+		displayFolder: KPIs
+		lineageTag: f922d275-65ea-4517-8d1b-5d559908d8c4
+
+		changedProperty = DisplayFolder
+
+		changedProperty = Name
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column msme_key
+		dataType: string
+		lineageTag: 9a3f2059-e84b-4d82-801c-48645945a17e
+		sourceLineageTag: msme_key
+		summarizeBy: none
+		sourceColumn: msme_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column business_partner
+		dataType: string
+		lineageTag: 36777d35-0f51-4ce3-a2aa-2b295a91d2f9
+		sourceLineageTag: business_partner
+		summarizeBy: none
+		sourceColumn: business_partner
+
+		annotation SummarizationSetBy = Automatic
+
+	column departement
+		dataType: string
+		lineageTag: 6067cb5e-0518-4940-9b45-b26b583afc3e
+		sourceLineageTag: departement
+		summarizeBy: none
+		sourceColumn: departement
+
+		annotation SummarizationSetBy = Automatic
+
+	column financial_institution
+		dataType: string
+		lineageTag: 8bf86864-214a-4f77-b088-fbc08f26f903
+		sourceLineageTag: financial_institution
+		summarizeBy: none
+		sourceColumn: financial_institution
+
+		annotation SummarizationSetBy = Automatic
+
+	column business_owner_sex
+		dataType: string
+		lineageTag: 93b8aa2b-8ec5-4f7a-be38-964b65d1337b
+		sourceLineageTag: business_owner_sex
+		summarizeBy: none
+		sourceColumn: business_owner_sex
+
+		annotation SummarizationSetBy = Automatic
+
+	column business_owner_age
+		dataType: int64
+		formatString: 0
+		lineageTag: b4aacb68-f94b-4cbf-8f70-3fc2b8bde634
+		sourceLineageTag: business_owner_age
+		summarizeBy: sum
+		sourceColumn: business_owner_age
+
+		annotation SummarizationSetBy = Automatic
+
+	column msme_productive
+		dataType: string
+		lineageTag: 58472b57-d6c8-4cb6-955f-74c3c1493645
+		sourceLineageTag: msme_productive
+		summarizeBy: none
+		sourceColumn: msme_productive
+
+		annotation SummarizationSetBy = Automatic
+
+	column msme_category
+		dataType: string
+		lineageTag: 1a432df6-6b71-44f5-9f33-ddd753b54dad
+		sourceLineageTag: msme_category
+		summarizeBy: none
+		sourceColumn: msme_category
+
+		annotation SummarizationSetBy = Automatic
+
+	column industry
+		dataType: string
+		lineageTag: b2c54066-3c0f-458c-aa40-d783e7adf3e2
+		sourceLineageTag: industry
+		summarizeBy: none
+		sourceColumn: industry
+
+		annotation SummarizationSetBy = Automatic
+
+	column savings_group
+		dataType: string
+		lineageTag: a6fa8293-33e5-4a61-86a1-535796c06161
+		sourceLineageTag: savings_group
+		summarizeBy: none
+		sourceColumn: savings_group
+
+		annotation SummarizationSetBy = Automatic
+
+	partition success_profile = entity
+		mode: directLake
+		source
+			entityName: success_profile
+			schemaName: dbo
+			expressionSource: 'DirectLake - LH_success_gold'
+
